@@ -264,7 +264,46 @@ app.get('/block-explorer', function(req, res) {
 	res.sendFile('./block-explorer/index.html', { root: __dirname });
 });
 
-
+// //alot sectors to each node
+// app.get('/alot-sectors-to-all',function(req,res){
+//   var network_length = bitcoin.networkNodes.length;
+//   var  jarurat= bitcoin.networkNodes.length;
+//   for (var a=[],i=0;i<network_length;++i) a[i]=i;
+//
+//     function shuffle(array) {
+//
+//       var tmp, current, top = array.length;
+//       if(top) while(--top) {
+//         current = Math.floor(Math.random() * (top + 1));
+//         tmp = array[current];
+//         array[current] = array[top];
+//         array[top] = tmp;
+//       }
+//       return array;
+//     }
+//
+//     a = shuffle(a);
+//
+//     var k= 6;
+//     var temp= Math.floor(a.length / k);
+//     var arr =[][];
+//     for(var b=0;b<k;b++){
+//       for(var i=b*temp; i<temp+b*temp; i++){
+//         arr[b][i].push(a[i]);
+//         network_length=network_length-1;
+//     }
+//     var p=0
+//     while(network_length != null){
+//       arr[p][temp].push(a[jarurat-network_length]);
+//       p=p+1;
+//       network_length=network_length-1;
+//     }
+// });
+//
+// //to alocate the sctor to a single nodes
+// //app.get('/alocate-sector',function(req,res){
+//
+// //});
 
 
 
