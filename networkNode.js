@@ -303,6 +303,7 @@ app.get('/block-explorer', function(req, res) {
 // //to alocate the sctor to a single nodes
 // //app.get('/alocate-sector',function(req,res){
 //
+
 // //});
 
 
