@@ -214,5 +214,4 @@ Blockchain.prototype.alocate_nsector= function(arr,nNode){
 };
 
 
-
 module.exports = Blockchain;

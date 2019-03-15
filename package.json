@@ -9,7 +9,9 @@
     "node_2": "nodemon --watch . -e js ./networkNode.js 3002 http://localhost:3002",
     "node_3": "nodemon --watch . -e js ./networkNode.js 3003 http://localhost:3003",
     "node_4": "nodemon --watch . -e js ./networkNode.js 3004 http://localhost:3004",
-    "node_5": "nodemon --watch . -e js ./networkNode.js 3005 http://localhost:3005"
+    "node_5": "nodemon --watch . -e js ./networkNode.js 3005 http://localhost:3005",
+    "nodee" : "nodemon --watch . -e js ./api.js 3006 http://localhost:3006"
+
   },
   "author": "",
   "license": "ISC",
