@@ -147,8 +147,71 @@ Blockchain.prototype.getAddressData = function(address) {
 	};
 };
 
+Blockchain.prototype.allot_sectors = function(){
+  function Create2DArray(r,c) {
+    var i = 0;
+    var j = 0;
+    arr = new Array();
+    for(i=0; i<r; i++)
+    {
+        arr[i] = new Array();
+        for(j=0; j<c; j++)
+        {
+            arr[i][j];
+        }
+    }
+      return arr;
+  }
 
+    var network_length = networkNodes.length;
+    var sectorIndex=0;
 
+    for (var a=[],i=0;i<50;++i) a[i]=i;
+    function shuffle(array) {
+        var tmp, current, top = array.length;
+        if(top) while(--top) {
+          current = Math.floor(Math.random() * (top + 1));
+          tmp = array[current];
+          array[current] = array[top];
+          array[top] = tmp;
+        }
+        return array;
+      }
+    a = shuffle(a);
+
+      var nSectors= 6;
+      var nNodes= Math.floor(a.length / nSectors);
+      var arr = Create2DArray(nSectors, nNodes);
+      console.log(arr);
+      var ind=0;
+      for(var b=0;b<nSectors;b++){
+        for(var i=0; i<nNodes; i++){
+          arr[b][i]=a[ind];
+          ind=ind+1;
+          network_length=network_length-1;
+        }
+      }
+      while(network_length != 0){
+        arr[sectorIndex][nNodes]= a[networkNodes.length-network_length];
+        sectorIndex=sectorIndex+1;
+        network_length=network_length-1;
+       }
+   return arr;
+};
+
+Blockchain.prototype.alocate_nsector= function(arr,nNode){
+	var min=arr[0].length;
+	var ind= 0;
+	for(i=0;i<arr.length;i++)
+	{
+		if(arr[i].length<min){
+			min=arr[i].length;
+			ind=i;
+		}
+	}
+	arr[ind][min]=nNode;
+  return arr;
+};
 
 
 
