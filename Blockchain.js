@@ -5,10 +5,8 @@ const uuid = require('uuid/v1');
 function Blockchain() {
 	this.chain = [];
 	this.pendingTransactions = [];
-
 	this.currentNodeUrl = currentNodeUrl;
 	this.networkNodes = [];
-
 	this.createNewBlock(100, '0', '0');
 };
 
@@ -146,42 +144,45 @@ Blockchain.prototype.getAddressData = function(address) {
 		addressBalance: balance
 	};
 };
+Blockchain.prototype.Create2DArray = function(r,c){
+	var i = 0;
+	var j = 0;
+	arr = new Array();
+	for(i=0; i<r; i++)
+	{
+			arr[i] = new Array();
+			for(j=0; j<c; j++)
+			{
+					arr[i][j];
+			}
+	}
+		return arr;
+}
+Blockchain.prototype.shuffle= function(array){
+		var tmp, current, top = array.length;
+		if(top) while(--top) {
+			current = Math.floor(Math.random() * (top + 1));
+			tmp = array[current];
+			array[current] = array[top];
+			array[top] = tmp;
+		}
+		return array;
+	}
 
 Blockchain.prototype.allot_sectors = function(){
-  function Create2DArray(r,c) {
-    var i = 0;
-    var j = 0;
-    arr = new Array();
-    for(i=0; i<r; i++)
-    {
-        arr[i] = new Array();
-        for(j=0; j<c; j++)
-        {
-            arr[i][j];
-        }
-    }
-      return arr;
-  }
-
+		networkNodes=[1,2,3,4,5,6,7,8,9,10,11,12]
     var network_length = networkNodes.length;
     var sectorIndex=0;
 
-    for (var a=[],i=0;i<50;++i) a[i]=i;
-    function shuffle(array) {
-        var tmp, current, top = array.length;
-        if(top) while(--top) {
-          current = Math.floor(Math.random() * (top + 1));
-          tmp = array[current];
-          array[current] = array[top];
-          array[top] = tmp;
-        }
-        return array;
-      }
-    a = shuffle(a);
+    for (var a=[],i=0;i<network_length;++i)
+		{
+			a[i]=i;
+		}
+    a =this.shuffle(a);
 
       var nSectors= 6;
       var nNodes= Math.floor(a.length / nSectors);
-      var arr = Create2DArray(nSectors, nNodes);
+      var arr = this.Create2DArray(nSectors, nNodes);
       console.log(arr);
       var ind=0;
       for(var b=0;b<nSectors;b++){

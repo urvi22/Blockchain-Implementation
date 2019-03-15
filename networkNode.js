@@ -1,3 +1,17 @@
+// // var shell = require('shelljs');
+// // shell.exec('npm run node_1')
+// // shell.exec('npm run node_2')
+// // shell.exec('npm run node_3')
+// var execSync = require('child_process').execSync;
+// var cmd = "npm run node_1";
+// var cmd1 = "npm run node_2";
+//
+// var options = {
+//   encoding: 'utf8'
+// };
+//
+// console.log(execSync(cmd, options));
+// // console.log(execSync(cmd1, options));
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -5,7 +19,6 @@ const Blockchain = require('./Blockchain');
 const uuid = require('uuid/v1');
 const port = process.argv[2];
 const rp = require('request-promise');
-
 const nodeAddress = uuid().split('-').join('');
 
 const bitcoin = new Blockchain();
@@ -14,7 +27,7 @@ const bitcoin = new Blockchain();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 
-
+// shell.echo("hello world")
 // get entire blockchain
 app.get('/blockchain', function (req, res) {
 //   // console.log(res.UserHostAddress);
@@ -273,6 +286,31 @@ app.get('/address/:address', function(req, res) {
 app.get('/block-explorer', function(req, res) {
 	res.sendFile('./block-explorer/index.html', { root: __dirname });
 });
+
+app.get('/mine_and_proof' , function (req , res) {
+  sectors=bitcoin.allot_sectors();
+  console.log("sector are = " + sectors);
+  console.log("no of sectors = " + sectors.length);
+
+  for (var a=[],i=0;i<=sectors.length/2;++i)
+  {
+    a[i]=i;
+  }
+  a=bitcoin.shuffle(a)
+
+  verification_sector = new Array();
+
+
+  for (i=0;i<sectors.length/2;i++)
+  {
+      verification_sector[i]=a[i];
+  }
+  mining_sector=a[a.length-1];
+
+  console.log("mining sector is = " + mining_sector);
+  console.log("verification sectors are = " + verification_sector);
+
+})
 
 
 app.listen(port, function() {
