@@ -151,5 +151,4 @@ Blockchain.prototype.getAddressData = function(address) {
 
 
 
-
 module.exports = Blockchain;

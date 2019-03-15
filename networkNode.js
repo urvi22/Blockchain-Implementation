@@ -17,6 +17,16 @@ app.use(bodyParser.urlencoded({ extended: false }));
 
 // get entire blockchain
 app.get('/blockchain', function (req, res) {
+//   // console.log(res.UserHostAddress);
+//
+//   var ipinfo;
+//
+//   getJSON("http://ipinfo.io", function (data) {
+//
+//     ("#info").html("City: " + data.city + " ,County: " + data.country + " ,IP: " + data.ip + " ,Location: " + data.loc + " ,Organisation: " + data.org + " ,Postal Code: " + data.postal + " ,Region: " + data.region + "")
+//
+// })
+
   res.send(bitcoin);
 });
 
