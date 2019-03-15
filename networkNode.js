@@ -274,49 +274,63 @@ app.get('/block-explorer', function(req, res) {
 	res.sendFile('./block-explorer/index.html', { root: __dirname });
 });
 
-// //alot sectors to each node
-// app.get('/alot-sectors-to-all',function(req,res){
-//   var network_length = bitcoin.networkNodes.length;
-//   var  jarurat= bitcoin.networkNodes.length;
-//   for (var a=[],i=0;i<network_length;++i) a[i]=i;
-//
-//     function shuffle(array) {
-//
-//       var tmp, current, top = array.length;
-//       if(top) while(--top) {
-//         current = Math.floor(Math.random() * (top + 1));
-//         tmp = array[current];
-//         array[current] = array[top];
-//         array[top] = tmp;
-//       }
-//       return array;
-//     }
-//
-//     a = shuffle(a);
-//
-//     var k= 6;
-//     var temp= Math.floor(a.length / k);
-//     var arr =[][];
-//     for(var b=0;b<k;b++){
-//       for(var i=b*temp; i<temp+b*temp; i++){
-//         arr[b][i].push(a[i]);
-//         network_length=network_length-1;
-//     }
-//     var p=0
-//     while(network_length != null){
-//       arr[p][temp].push(a[jarurat-network_length]);
-//       p=p+1;
-//       network_length=network_length-1;
-//     }
-// });
-//
-// //to alocate the sctor to a single nodes
-// //app.get('/alocate-sector',function(req,res){
-//
+//allot sectors to each node
+app.get('/allot-sectors-to-all',function(req,res){
+  function Create2DArray(r,c) {
+    var i = 0;
+    var j = 0;
+    arr = new Array();
+    for(i=0; i<r; i++)
+    {
+        arr[i] = new Array();
+        for(j=0; j<c; j++)
+        {
+            arr[i][j];
+        }
+    }
+      return arr;
+  }
 
-// //});
+    var network_length = networkNodes.length;
+    var sectorIndex=0;
 
+    for (var a=[],i=0;i<50;++i) a[i]=i;
+    function shuffle(array) {
+        var tmp, current, top = array.length;
+        if(top) while(--top) {
+          current = Math.floor(Math.random() * (top + 1));
+          tmp = array[current];
+          array[current] = array[top];
+          array[top] = tmp;
+        }
+        return array;
+      }
+    a = shuffle(a);
 
+      var nSectors= 6;
+      var nNodes= Math.floor(a.length / nSectors);
+      var arr = Create2DArray(nSectors, nNodes);
+      console.log(arr);
+      var ind=0;
+      for(var b=0;b<nSectors;b++){
+        for(var i=0; i<nNodes; i++){
+          arr[b][i]=a[ind];
+          ind=ind+1;
+          network_length=network_length-1;
+        }
+      }
+      while(network_length != 0){
+        arr[sectorIndex][nNodes]= a[networkNodes.length-network_length];
+        sectorIndex=sectorIndex+1;
+        network_length=network_length-1;
+       }
+  //console.log(arr);
+});
+
+//to alocate the sctor to a single nodes
+app.get('/alocate-sector',function(req,res){
+
+});
 
 app.listen(port, function() {
 	console.log(`Listening on port ${port}...`);
