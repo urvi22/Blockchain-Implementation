@@ -144,6 +144,8 @@ Blockchain.prototype.getAddressData = function(address) {
 		addressBalance: balance
 	};
 };
+
+
 Blockchain.prototype.Create2DArray = function(r,c){
 	var i = 0;
 	var j = 0;
@@ -170,7 +172,8 @@ Blockchain.prototype.shuffle= function(array){
 	}
 
 Blockchain.prototype.allot_sectors = function(){
-		networkNodes=[1,2,3,4,5,6,7,8,9,10,11,12]
+		networkNodes=[1,2,3,4,5,6]
+			//7,8,9,10,11,12]
     var network_length = networkNodes.length;
     var sectorIndex=0;
 
@@ -183,7 +186,7 @@ Blockchain.prototype.allot_sectors = function(){
       var nSectors= 6;
       var nNodes= Math.floor(a.length / nSectors);
       var arr = this.Create2DArray(nSectors, nNodes);
-      console.log(arr);
+      //console.log(arr);
       var ind=0;
       for(var b=0;b<nSectors;b++){
         for(var i=0; i<nNodes; i++){
