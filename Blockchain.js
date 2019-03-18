@@ -170,6 +170,12 @@ Blockchain.prototype.shuffle= function(array){
 		}
 		return array;
 	}
+Blockchain.prototype.in_array = function(arr,n){
+for (var i =0;i<arr.length;i++)
+{if (arr[i]==n)
+{return 1;
+break;}}	
+}
 
 Blockchain.prototype.allot_sectors = function(){
 		networkNodes=[1,2,3,4,5,6]

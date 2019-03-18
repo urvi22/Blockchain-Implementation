@@ -266,6 +266,7 @@ app.get('/block-explorer', function(req, res) {
 
 var sectors=[]
 app.get('/mine_and_proof' , function (req , res) {
+
   sectors=bitcoin.allot_sectors();
   res.json({ note: `Blocks are alloted` });
   console.log("sector are= " + sectors);
@@ -296,9 +297,9 @@ app.post('/transaction/broadcast', function(req, res) {
 	bitcoin.addTransactionToPendingTransactions(newTransaction);
 
 	const requestPromises = [];
-  console.log("hiii");
+  //console.log("hiii");
   const urlss=[]
-  console.log(verification_sector);
+  console.log("verification_sector="+verification_sector);
   for (i=0;i<verification_sector.length;++i)
   {
     for (j=0;j<sectors[verification_sector[i]].length;++j)
@@ -306,15 +307,21 @@ app.post('/transaction/broadcast', function(req, res) {
       urlss[i+j]=sectors[verification_sector[i]][j];
     }
   }
-  console.log(urlss);
-  var nodes=[];
-  for (i=0;i<verification_sector.length;++i)
-  {
-    nodes[i]=networkNodes[urlss[i]];
-  }
-  console.log(nodes);
 
-	nodes.forEach(networkNodeUrl => {
+  //urls for verification
+  urlss.sort();
+  for(var i =0;i<urlss.length;i++)
+  {urlss[i]+=1;
+  }
+
+  console.log("urlss="+urlss);
+
+  console.log("all urls="+bitcoin.networkNodes);
+
+	bitcoin.networkNodes.forEach(networkNodeUrl => {
+
+    if (bitcoin.in_array(urlss,networkNodeUrl[20]))
+    {
 		const requestOptions = {
 			uri: networkNodeUrl + '/transaction',
 			method: 'POST',
@@ -323,15 +330,15 @@ app.post('/transaction/broadcast', function(req, res) {
 		};
 
 		requestPromises.push(rp(requestOptions));
-	});
+	}
+
+});
 
 	Promise.all(requestPromises)
 	.then(data => {
 		res.json({ note: 'Transaction created and broadcast successfully.' });
 	});
 });
-
-
 
 app.listen(port, function() {
 	console.log(`Listening on port ${port}...`);
