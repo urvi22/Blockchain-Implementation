@@ -13,19 +13,9 @@ const bitcoin = new Blockchain();
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
   verification_sector = new Array();
-// shell.echo("hello world")
-// get entire blockchain
-app.get('/blockchain', function (req, res) {
-//   // console.log(res.UserHostAddress);
-//
-//   var ipinfo;
-//
-//   getJSON("http://ipinfo.io", function (data) {
-//
-//     ("#info").html("City: " + data.city + " ,County: " + data.country + " ,IP: " + data.ip + " ,Location: " + data.loc + " ,Organisation: " + data.org + " ,Postal Code: " + data.postal + " ,Region: " + data.region + "")
-//
-// })
 
+//details
+app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
@@ -252,14 +242,11 @@ app.get('/block-explorer', function(req, res) {
 
 
 var sectors=[]
-app.get('/mine_and_proof' , function (req , res) {
+app.get('/sector_allocation' , function (req , res) {
 
   sectors=bitcoin.allot_sectors();
   res.json({ note: `Blocks are alloted` });
   console.log("sector are= " + sectors);
-
-  // console.log("sec are= " + sectors[0]);
-  // console.log("sec are= " + sectors[1]);
   console.log("no of sectors = " + sectors.length);
   currentNodeId=5                      // place Your current node id here
   for (i=0;i<sectors.length;i++)
@@ -304,7 +291,6 @@ app.get('/mine_and_proof' , function (req , res) {
     }
   }
 
-
   console.log("mining sector is = " + mining_sector);
   console.log("verification sectors are = " + verification_sector);
 
@@ -317,7 +303,6 @@ app.post('/transaction/broadcast', function(req, res) {
 	bitcoin.addTransactionToPendingTransactions(newTransaction);
 
 	const requestPromises = [];
-  //console.log("hiii");
   const urlss=[]
   console.log("verification_sector="+verification_sector);
   for (i=0;i<verification_sector.length;++i)
@@ -359,6 +344,8 @@ app.post('/transaction/broadcast', function(req, res) {
 		res.json({ note: 'Transaction created and broadcast successfully.' });
 	});
 });
+
+
 
 app.listen(port, function() {
 	console.log(`Listening on port ${port}...`);

@@ -33,44 +33,73 @@ Blockchain.prototype.getLastBlock = function() {
 	return this.chain[this.chain.length - 1];
 };
 
+var users=[];
+var users_amount=[];
+users.push("B")
+users_amount.push(10)
+users.push("A")
+users_amount.push(10)
+
+
 
 Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) {
-	const newTransaction = {
+var ver=0;
+if (this.enough_amount(amount,sender,recipient))
+{
+	console.log("verified");
+  ver =1;
+}
+else
+{
+	console.log("not verified");
+}
+
+const	newTransaction = {
 		amount: amount,
 		sender: sender,
 		recipient: recipient,
-		transactionId: uuid().split('-').join('')
+		transactionId: uuid().split('-').join(''),
+		verification_done:ver
 	};
 
+  this.pendingTransactions.push(newTransaction);
+};
+
+
+Blockchain.prototype.enough_amount = function(amount,sen,res){
 	flag1=0;
 	flag2=0;
 
-	for(int i=0;i<this.consumers.length;i++)
-	{
-		if(this.consumers[i]==newTransaction['sender'])
-		{
-			flag1=1;
-		}
+	for (var i =0;i<users.length;i++)
+	{	if (users[i]==res)
+	 	{ //console.log("2");
+		flag2=1;
+			}
 
-		if(this.consumers[i]==newTransaction['recipient'])
-		{
-			flag2=1;
-		}
+		if (users[i]==sen)
+		{	//console.log("1");
+		flag1=1;
+		if(users_amount[i]>=amount)
+		{return 1;}
+		else {
+			return 0;
+		}}
+
 	}
 
 	if(flag1==0)
 	{
-		this.consumers.push(newTransaction['sender'])
+		users.push(sen)
+		users_amount.push(0)
 	}
 
 	if(flag2==0)
 	{
-		this.consumers.push(newTransaction['recipient'])
+		users.push(res)
+		users_amount.push(0)
 	}
-
-	return newTransaction;
+	console.log("user="+users);
 };
-
 
 Blockchain.prototype.addTransactionToPendingTransactions = function(transactionObj) {
 	this.pendingTransactions.push(transactionObj);
@@ -201,7 +230,7 @@ Blockchain.prototype.in_array = function(arr,n){
 for (var i =0;i<arr.length;i++)
 {if (arr[i]==n)
 {return 1;
-break;}}	
+break;}}
 }
 
 Blockchain.prototype.allot_sectors = function(){
