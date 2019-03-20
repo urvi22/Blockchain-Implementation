@@ -351,7 +351,10 @@ app.post('/transaction/broadcast', function(req, res) {
 	});
 });
 
-
+// app.get('/verify', function(req, res){
+//   transactions=req.body.transaction;
+//
+// }
 
 app.listen(port, function() {
 	console.log(`Listening on port ${port}...`);

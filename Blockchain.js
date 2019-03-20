@@ -7,6 +7,7 @@ function Blockchain() {
 	this.pendingTransactions = [];
 	this.currentNodeUrl = currentNodeUrl;
 	this.networkNodes = [];
+	this.consumers=[];
 	this.createNewBlock(100, '0', '0');
 };
 
@@ -40,6 +41,32 @@ Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) 
 		recipient: recipient,
 		transactionId: uuid().split('-').join('')
 	};
+
+	flag1=0;
+	flag2=0;
+
+	for(int i=0;i<this.consumers.length;i++)
+	{
+		if(this.consumers[i]==newTransaction['sender'])
+		{
+			flag1=1;
+		}
+
+		if(this.consumers[i]==newTransaction['recipient'])
+		{
+			flag2=1;
+		}
+	}
+
+	if(flag1==0)
+	{
+		this.consumers.push(newTransaction['sender'])
+	}
+
+	if(flag2==0)
+	{
+		this.consumers.push(newTransaction['recipient'])
+	}
 
 	return newTransaction;
 };
