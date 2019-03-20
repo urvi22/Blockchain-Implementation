@@ -1,17 +1,3 @@
-// // var shell = require('shelljs');
-// // shell.exec('npm run node_1')
-// // shell.exec('npm run node_2')
-// // shell.exec('npm run node_3')
-// var execSync = require('child_process').execSync;
-// var cmd = "npm run node_1";
-// var cmd1 = "npm run node_2";
-//
-// var options = {
-//   encoding: 'utf8'
-// };
-//
-// console.log(execSync(cmd, options));
-// // console.log(execSync(cmd1, options));
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -126,6 +112,7 @@ app.post('/receive-new-block', function(req, res) {
 // register a node and broadcast it the network
 app.post('/register-and-broadcast-node', function(req, res) {
 	const newNodeUrl = req.body.newNodeUrl;
+  // console.log("nodes are= " + networkNodes[4]);
 	if (bitcoin.networkNodes.indexOf(newNodeUrl) == -1) bitcoin.networkNodes.push(newNodeUrl);
 
 	const regNodesPromises = [];
@@ -271,19 +258,52 @@ app.get('/mine_and_proof' , function (req , res) {
   res.json({ note: `Blocks are alloted` });
   console.log("sector are= " + sectors);
 
-  console.log("nodes are= " + networkNodes[4]);
+  // console.log("sec are= " + sectors[0]);
+  // console.log("sec are= " + sectors[1]);
   console.log("no of sectors = " + sectors.length);
+  currentNodeId=5                      // place Your current node id here
+  for (i=0;i<sectors.length;i++)
+  {
+      for (j=0;j<sectors[i].length;j++)
+      {
+        if(sectors[i][j]==currentNodeId)
+        {
+          currentNodeSector=i
+          break;
+        }
+      }
+  }
+  console.log("current node sector" + currentNodeSector);
 
-  for (var a=[],i=0;i<=sectors.length/2;++i)
+  for (var a=[],i=0;i<sectors.length;++i)
   {
     a[i]=i;
   }
   a=bitcoin.shuffle(a)
-  for (i=0;i<sectors.length/2;i++)
+  var count=0;
+  var i=0;
+  for (i=0;i<sectors.length;i++)
   {
-      verification_sector[i]=a[i];
+      if(count==sectors.length/2)
+      {
+          break;
+      }
+      if(a[i]!=currentNodeSector)
+      {
+          verification_sector[count]=a[i];
+          count++;
+      }
+
   }
-  mining_sector=a[a.length-1];
+
+  for (j=i;j<sectors.length;j++)
+  {
+    if(a[j]!=currentNodeSector)
+    {
+        mining_sector=a[j];
+    }
+  }
+
 
   console.log("mining sector is = " + mining_sector);
   console.log("verification sectors are = " + verification_sector);

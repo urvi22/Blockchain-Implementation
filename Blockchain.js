@@ -7,6 +7,7 @@ function Blockchain() {
 	this.pendingTransactions = [];
 	this.currentNodeUrl = currentNodeUrl;
 	this.networkNodes = [];
+	this.consumers=[];
 	this.createNewBlock(100, '0', '0');
 };
 
@@ -40,6 +41,32 @@ Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) 
 		recipient: recipient,
 		transactionId: uuid().split('-').join('')
 	};
+
+	flag1=0;
+	flag2=0;
+
+	for(int i=0;i<this.consumers.length;i++)
+	{
+		if(this.consumers[i]==newTransaction['sender'])
+		{
+			flag1=1;
+		}
+
+		if(this.consumers[i]==newTransaction['recipient'])
+		{
+			flag2=1;
+		}
+	}
+
+	if(flag1==0)
+	{
+		this.consumers.push(newTransaction['sender'])
+	}
+
+	if(flag2==0)
+	{
+		this.consumers.push(newTransaction['recipient'])
+	}
 
 	return newTransaction;
 };
@@ -178,8 +205,7 @@ break;}}
 }
 
 Blockchain.prototype.allot_sectors = function(){
-		networkNodes=[1,2,3,4,5,6]
-			//7,8,9,10,11,12]
+		networkNodes=[1,2,3,4,5,6,7,8,9,10,11,12]
     var network_length = networkNodes.length;
     var sectorIndex=0;
 
@@ -189,24 +215,26 @@ Blockchain.prototype.allot_sectors = function(){
 		}
     a =this.shuffle(a);
 
-      var nSectors= 6;
-      var nNodes= Math.floor(a.length / nSectors);
-      var arr = this.Create2DArray(nSectors, nNodes);
-      //console.log(arr);
-      var ind=0;
-      for(var b=0;b<nSectors;b++){
-        for(var i=0; i<nNodes; i++){
-          arr[b][i]=a[ind];
-          ind=ind+1;
-          network_length=network_length-1;
-        }
-      }
-      while(network_length != 0){
-        arr[sectorIndex][nNodes]= a[networkNodes.length-network_length];
-        sectorIndex=sectorIndex+1;
+    var nSectors= 6;
+    var nNodes= Math.floor(a.length / nSectors);
+    var arr = this.Create2DArray(nSectors, nNodes);
+    //console.log(arr);
+    var ind=0;
+    for(var b=0;b<nSectors;b++){
+      for(var i=0; i<nNodes; i++){
+        arr[b][i]=a[ind];
+        ind=ind+1;
         network_length=network_length-1;
-       }
-   return arr;
+      }
+    }
+    while(network_length != 0)
+		{
+      arr[sectorIndex][nNodes]= a[networkNodes.length-network_length];
+      sectorIndex=sectorIndex+1;
+      network_length=network_length-1;
+    }
+
+		return arr;
 };
 
 Blockchain.prototype.alocate_nsector= function(arr,nNode){

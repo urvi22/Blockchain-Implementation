@@ -12,7 +12,6 @@
     "node_5": "nodemon --watch . -e js ./networkNode.js 3005 http://localhost:3005",
     "node_6": "nodemon --watch . -e js ./networkNode.js 3006 http://localhost:3006",
     "node_7": "nodemon --watch . -e js ./networkNode.js 3007 http://localhost:3007",
-
     "nodee" : "nodemon --watch . -e js ./api.js 3006 http://localhost:3006"
 
   },
