@@ -242,13 +242,15 @@ app.get('/block-explorer', function(req, res) {
 
 
 var sectors=[]
+var mining_sector=[]
 app.get('/sector_allocation' , function (req , res) {
 
-  sectors=bitcoin.allot_sectors();
+  sectors=bitcoin.allot_sectors(port);
   res.json({ note: `Blocks are alloted` });
   console.log("sector are= " + sectors);
   console.log("no of sectors = " + sectors.length);
-  currentNodeId=5                      // place Your current node id here
+  var currentNodeId=port;                      // place Your current node id here
+  var currentNodeSector=0;
   for (i=0;i<sectors.length;i++)
   {
       for (j=0;j<sectors[i].length;j++)
@@ -260,7 +262,7 @@ app.get('/sector_allocation' , function (req , res) {
         }
       }
   }
-  console.log("current node sector" + currentNodeSector);
+  console.log("current node sector==" + currentNodeSector);
 
   for (var a=[],i=0;i<sectors.length;++i)
   {
@@ -296,21 +298,25 @@ app.get('/sector_allocation' , function (req , res) {
 
 })
 
-
 // broadcast transaction
 app.post('/transaction/broadcast', function(req, res) {
 	const newTransaction = bitcoin.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
 	bitcoin.addTransactionToPendingTransactions(newTransaction);
 
 	const requestPromises = [];
-  const urlss=[]
-  console.log("verification_sector="+verification_sector);
+  const urlss=[];
   for (i=0;i<verification_sector.length;++i)
   {
     for (j=0;j<sectors[verification_sector[i]].length;++j)
     {
       urlss[i+j]=sectors[verification_sector[i]][j];
     }
+  }
+  var c=0;
+  for (i=0;i<mining_sector.length;++i)
+  {
+    urlss.push(mining_sector[i]);
+    c+=1;
   }
 
   //urls for verification
@@ -320,12 +326,12 @@ app.post('/transaction/broadcast', function(req, res) {
   }
 
   console.log("urlss="+urlss);
-
   console.log("all urls="+bitcoin.networkNodes);
 
 	bitcoin.networkNodes.forEach(networkNodeUrl => {
+    var sub=networkNodeUrl[19]+networkNodeUrl[20];
 
-    if (bitcoin.in_array(urlss,networkNodeUrl[20]))
+    if (bitcoin.in_array(urlss,sub))
     {
 		const requestOptions = {
 			uri: networkNodeUrl + '/transaction',

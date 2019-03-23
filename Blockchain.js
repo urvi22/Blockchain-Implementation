@@ -45,14 +45,14 @@ users_amount.push(10)
 Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) {
 var ver=0;
 if (this.enough_amount(amount,sender,recipient))
-{
-	console.log("verified");
-  ver =1;
-}
-else
-{
-	console.log("not verified");
-}
+	{
+		console.log("verified");
+	  ver =1;
+	}
+	else
+	{
+		console.log("not verified");
+	}
 
 const	newTransaction = {
 		amount: amount,
@@ -72,18 +72,19 @@ Blockchain.prototype.enough_amount = function(amount,sen,res){
 
 	for (var i =0;i<users.length;i++)
 	{	if (users[i]==res)
-	 	{ //console.log("2");
+	 	{
 		flag2=1;
 			}
 
 		if (users[i]==sen)
-		{	//console.log("1");
-		flag1=1;
-		if(users_amount[i]>=amount)
-		{return 1;}
-		else {
-			return 0;
-		}}
+		{
+			flag1=1;
+			if(users_amount[i]>=amount)
+			{return 1;}
+			else {
+				return 0;
+			}
+		}
 
 	}
 
@@ -228,16 +229,18 @@ Blockchain.prototype.shuffle= function(array){
 	}
 Blockchain.prototype.in_array = function(arr,n){
 for (var i =0;i<arr.length;i++)
-{if (arr[i]==n)
-{return 1;
-break;}}
+	{if (arr[i]==n)
+			{	return 1;
+				break;
+			}
+	}
 }
 
-Blockchain.prototype.allot_sectors = function(){
-		networkNodes=[1,2,3,4,5,6,7,8,9,10,11,12]
+Blockchain.prototype.allot_sectors = function(port){
+		networkNodes=[1,2,3,4,5,6]
     var network_length = networkNodes.length;
     var sectorIndex=0;
-
+		var currentNodeId=port;
     for (var a=[],i=0;i<network_length;++i)
 		{
 			a[i]=i;
