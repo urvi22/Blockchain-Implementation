@@ -9,7 +9,8 @@ const rp = require('request-promise');
 const nodeAddress = uuid().split('-').join('');
 
 const bitcoin = new Blockchain();
-
+var shell = require('shelljs');
+// shell.echo('hello world');
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -20,6 +21,10 @@ app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
+app.get('/startnode',function (req , res) {
+  console.log("fd");
+  shell.exec("concurrently \"npm run node_3\"", {silent:true}).stdout;
+})
 
 // create a new transaction
 app.post('/transaction', function(req, res) {
