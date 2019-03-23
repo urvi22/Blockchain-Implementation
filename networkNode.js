@@ -1,3 +1,4 @@
+
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -350,24 +351,3 @@ app.post('/transaction/broadcast', function(req, res) {
 const server = app.listen(port, function() {
 	console.log(`Listening on port ${port}...`);
 });
-
-// process.on('uncaughtException', function() {
-//   console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
-//   // some other closing procedures go here
-//   app.close();
-//   // process.exit(1);
-// });
-process.on('SIGTERM', () => {
-  server.close(() => {
-    console.log('Process terminated')
-  })
-})
-// app.close(port, function() {
-// 	console.log(`closing on port ${port}...`);
-// });
-// process.on('SIGOUT', function() {
-//   console.log( "\nGracefully shutting down from SIGINT (Ctrl-C)" );
-//   // some other closing procedures go here
-//   process.exit(1);
-//   sever.close();
-// });

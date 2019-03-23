@@ -35,10 +35,10 @@ Blockchain.prototype.getLastBlock = function() {
 
 var users=[];
 var users_amount=[];
-users.push("B")
-users_amount.push(10)
-users.push("A")
-users_amount.push(10)
+// users.push("B")
+// users_amount.push(10)
+// users.push("A")
+// users_amount.push(10)
 
 
 
