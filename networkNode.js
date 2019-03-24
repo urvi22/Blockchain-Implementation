@@ -303,7 +303,8 @@ app.get('/sector_allocation' , function (req , res) {
   console.log("verification sectors are = " + verification_sector);
 
 })
-
+veri =""
+mini=""
 // broadcast transaction
 app.post('/transaction/broadcast', function(req, res) {
 	const newTransaction = bitcoin.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
@@ -311,14 +312,23 @@ app.post('/transaction/broadcast', function(req, res) {
 
 	const requestPromises = [];
   const urlss=[]
+  //
+
   console.log("verification_sector="+verification_sector);
   for (i=0;i<verification_sector.length;++i)
   {
     for (j=0;j<sectors[verification_sector[i]].length;++j)
     {
       urlss[i+j]=sectors[verification_sector[i]][j];
+      veri=veri+" "+sectors[verification_sector[i]][j];
     }
   }
+  console.log("veri"+veri);
+
+  for (i=0;i<sectors[mining_sector].length;++i)
+  {urlss.push(sectors[mining_sector][i]);
+  mini=mini+" "+sectors[mining_sector][i];}
+  console.log("mini"+mini);
 
   //urls for verification
   urlss.sort();
@@ -359,7 +369,7 @@ app.post('/sector', function(req, res) {
 });
 
 app.post('/sector/broadcast', function(req, res) {
-	const newsector = bitcoin.createNewSector(req.body.indices, req.body.veri, req.body.minee);
+	const newsector = bitcoin.createNewSector(req.body.indices, veri, mini);
 	bitcoin.addSectorsToSectors_list(newsector);
 
 	const requestPromises = [];
