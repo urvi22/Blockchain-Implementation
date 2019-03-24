@@ -8,7 +8,6 @@ function Blockchain() {
 	this.currentNodeUrl = currentNodeUrl;
 	this.networkNodes = [];
 	this.consumers=[];
-	this.sector_list=[];
 	this.createNewBlock(100, '0', '0');
 };
 
@@ -36,10 +35,10 @@ Blockchain.prototype.getLastBlock = function() {
 
 var users=[];
 var users_amount=[];
-users.push("B")
-users_amount.push(10)
-users.push("A")
-users_amount.push(10)
+// users.push("B")
+// users_amount.push(10)
+// users.push("A")
+// users_amount.push(10)
 
 
 
@@ -63,7 +62,7 @@ const	newTransaction = {
 		verification_done:ver
 	};
 
-  return newTransaction;
+  this.pendingTransactions.push(newTransaction);
 };
 
 
@@ -106,21 +105,6 @@ Blockchain.prototype.enough_amount = function(amount,sen,res){
 Blockchain.prototype.addTransactionToPendingTransactions = function(transactionObj) {
 	this.pendingTransactions.push(transactionObj);
 	return this.getLastBlock()['index'] + 1;
-};
-
-Blockchain.prototype.addSectorsToSectors_list = function(sectorObj) {
-	this.sector_list.push(sectorObj);
-	return 1;
-};
-
-Blockchain.prototype.createNewSector = function(indices, veri, minee) {
-const	newsector = {
-		indices: indices,
-		veri: veri,
-		minee: minee,
-	};
-
-  return newsector;
 };
 
 
@@ -252,13 +236,9 @@ for (var i =0;i<arr.length;i++)
 	}
 }
 
-Blockchain.prototype.allot_sectors = function(port,nodes){
-	networkNodes=[];
-		networkNodes.push(port%100);
-		for(i=0;i<nodes.length;i++)
-		{networkNodes.push(nodes[i]);}
-		console.log("networkNodes"+networkNodes);
-
+Blockchain.prototype.allot_sectors = function(port , nodes){
+		networkNodes=nodes;
+		console.log("nodes are + " , networkNodes);
     var network_length = networkNodes.length;
     var sectorIndex=0;
 		var currentNodeId=port;
@@ -268,7 +248,7 @@ Blockchain.prototype.allot_sectors = function(port,nodes){
 		}
     a =this.shuffle(a);
 
-    var nSectors= 6;
+    var nSectors= 6;																	// remember to update no of sectors
     var nNodes= Math.floor(a.length / nSectors);
     var arr = this.Create2DArray(nSectors, nNodes);
     //console.log(arr);
@@ -303,10 +283,6 @@ Blockchain.prototype.alocate_nsector= function(arr,nNode){
 	arr[ind][min]=nNode;
   return arr;
 };
-
-
-
-
 
 
 module.exports = Blockchain;
