@@ -109,7 +109,7 @@ Blockchain.prototype.addTransactionToPendingTransactions = function(transactionO
 };
 
 Blockchain.prototype.addSectorsToSectors_list = function(sectorObj) {
-	this.pendingTransactions.push(sectorObj);
+	this.sector_list.push(sectorObj);
 	return 1;
 };
 
@@ -252,9 +252,13 @@ for (var i =0;i<arr.length;i++)
 	}
 }
 
-Blockchain.prototype.allot_sectors = function(port){
-		networkNodes=[1,2,3,4,5,6]
-		//,7,8,9,10,11,12
+Blockchain.prototype.allot_sectors = function(port,nodes){
+	networkNodes=[];
+		networkNodes.push(port%100);
+		for(i=0;i<nodes.length;i++)
+		{networkNodes.push(nodes[i]);}
+		console.log("networkNodes"+networkNodes);
+
     var network_length = networkNodes.length;
     var sectorIndex=0;
 		var currentNodeId=port;

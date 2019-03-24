@@ -103,10 +103,11 @@ app.post('/receive-new-block', function(req, res) {
 	}
 });
 
-
+nodes=[];
 // register a node and broadcast it the network
 app.post('/register-and-broadcast-node', function(req, res) {
 	const newNodeUrl = req.body.newNodeUrl;
+  nodes.push(newNodeUrl[19]+newNodeUrl[20]);
   // console.log("nodes are= " + networkNodes[4]);
 	if (bitcoin.networkNodes.indexOf(newNodeUrl) == -1) bitcoin.networkNodes.push(newNodeUrl);
 
@@ -250,7 +251,7 @@ var sectors=[]
 var mining_sector=[]
 app.get('/sector_allocation' , function (req , res) {
 
-  sectors=bitcoin.allot_sectors(port);
+  sectors=bitcoin.allot_sectors(port,nodes);
   res.json({ note: `Blocks are alloted` });
   console.log("sector are= " + sectors);
   console.log("no of sectors = " + sectors.length);
