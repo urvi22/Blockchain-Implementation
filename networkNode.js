@@ -305,6 +305,7 @@ app.get('/sector_allocation' , function (req , res) {
 })
 veri =""
 mini=""
+mine_urls=[]
 // broadcast transaction
 app.post('/transaction/broadcast', function(req, res) {
 	const newTransaction = bitcoin.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
@@ -312,6 +313,7 @@ app.post('/transaction/broadcast', function(req, res) {
 
 	const requestPromises = [];
   const urlss=[]
+
   //
 
   console.log("verification_sector="+verification_sector);
@@ -327,7 +329,8 @@ app.post('/transaction/broadcast', function(req, res) {
 
   for (i=0;i<sectors[mining_sector].length;++i)
   {urlss.push(sectors[mining_sector][i]);
-  mini=mini+" "+sectors[mining_sector][i];}
+  mini=mini+" "+sectors[mining_sector][i];
+mine_urls.push(sectors[mining_sector][i])}
   console.log("mini"+mini);
 
   //urls for verification
@@ -389,6 +392,36 @@ app.post('/sector/broadcast', function(req, res) {
 	Promise.all(requestPromises)
 	.then(data => {
 		res.json({ note: 'sector created and broadcast successfully.' });
+	});
+});
+
+
+var a=0;
+app.post('/verify', function(req, res) {
+a+=1;
+console.log("a=="+a);
+res.json({ note: 'verification notification received' });
+});
+
+
+app.get('/verification-broadcast', function(req, res) {
+  const requestPromises = [];
+  bitcoin.networkNodes.forEach(networkNodeUrl => {
+    if (bitcoin.in_array(mine_urls,networkNodeUrl[19]+networkNodeUrl[20]))
+    { console.log("hi");
+		const requestOptions = {
+			uri: networkNodeUrl + '/verify',
+
+			json: true
+		};
+		requestPromises.push(rp(requestOptions));
+}
+
+});
+
+	Promise.all(requestPromises)
+	.then(data => {
+		res.json({ note: 'verification.' });
 	});
 });
 
