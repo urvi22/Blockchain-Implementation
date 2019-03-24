@@ -1,4 +1,3 @@
-
 const express = require('express');
 const app = express();
 const bodyParser = require('body-parser');
@@ -310,19 +309,14 @@ app.post('/transaction/broadcast', function(req, res) {
 	bitcoin.addTransactionToPendingTransactions(newTransaction);
 
 	const requestPromises = [];
-  const urlss=[];
+  const urlss=[]
+  console.log("verification_sector="+verification_sector);
   for (i=0;i<verification_sector.length;++i)
   {
     for (j=0;j<sectors[verification_sector[i]].length;++j)
     {
       urlss[i+j]=sectors[verification_sector[i]][j];
     }
-  }
-  var c=0;
-  for (i=0;i<mining_sector.length;++i)
-  {
-    urlss.push(mining_sector[i]);
-    c+=1;
   }
 
   //urls for verification
@@ -332,12 +326,12 @@ app.post('/transaction/broadcast', function(req, res) {
   }
 
   console.log("urlss="+urlss);
+
   console.log("all urls="+bitcoin.networkNodes);
 
 	bitcoin.networkNodes.forEach(networkNodeUrl => {
-    var sub=networkNodeUrl[19]+networkNodeUrl[20];
 
-    if (bitcoin.in_array(urlss,sub))
+    if (bitcoin.in_array(urlss,networkNodeUrl[20]))
     {
 		const requestOptions = {
 			uri: networkNodeUrl + '/transaction',
@@ -357,7 +351,35 @@ app.post('/transaction/broadcast', function(req, res) {
 	});
 });
 
+app.post('/sector', function(req, res) {
+	const newsector = req.body;
+	const blockIndex = bitcoin.addSectorsToSectors_list(newsector);
+	res.json({ note: `Sector will be added ${blockIndex}.` });
+});
 
+app.post('/sector/broadcast', function(req, res) {
+	const newsector = bitcoin.createNewSector(req.body.indices, req.body.veri, req.body.minee);
+	bitcoin.addSectorsToSectors_list(newsector);
+
+	const requestPromises = [];
+  bitcoin.networkNodes.forEach(networkNodeUrl => {
+		const requestOptions = {
+			uri: networkNodeUrl + '/sector',
+			method: 'POST',
+			body: newsector,
+			json: true
+		};
+
+		requestPromises.push(rp(requestOptions));
+
+
+});
+
+	Promise.all(requestPromises)
+	.then(data => {
+		res.json({ note: 'sector created and broadcast successfully.' });
+	});
+});
 
 const server = app.listen(port, function() {
 	console.log(`Listening on port ${port}...`);
