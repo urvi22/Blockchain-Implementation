@@ -63,7 +63,7 @@ const	newTransaction = {
 		verification_done:ver
 	};
 
-  this.pendingTransactions.push(newTransaction);
+  return newTransaction;
 };
 
 
@@ -120,7 +120,7 @@ const	newsector = {
 		minee: minee,
 	};
 
-  this.sector_list.push(newsector);
+  return newsector;
 };
 
 
