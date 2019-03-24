@@ -32,11 +32,13 @@ app.post('/transaction', function(req, res) {
 	res.json({ note: `Transaction will be added in block ${blockIndex}.` });
 });
 
-
+var a=0;//verication count-------------------
 // mine a block
 app.get('/mine', function(req, res) {
+  if(a>=3){
 	const lastBlock = bitcoin.getLastBlock();
 	const previousBlockHash = lastBlock['hash'];
+
 	const currentBlockData = {
 		transactions: bitcoin.pendingTransactions,
 		index: lastBlock['index'] + 1
@@ -58,28 +60,18 @@ app.get('/mine', function(req, res) {
 	});
 
 	Promise.all(requestPromises)
-	.then(data => {
-		const requestOptions = {
-			uri: bitcoin.currentNodeUrl + '/transaction/broadcast',
-			method: 'POST',
-			body: {
-				amount: 12.5,
-				sender: "00",
-				recipient: nodeAddress
-			},
-			json: true
-		};
 
-		return rp(requestOptions);
-	})
 	.then(data => {
 		res.json({
 			note: "New block mined & broadcast successfully",
 			block: newBlock
 		});
 	});
+}
+else{
+  res.json({ note: 'not enough verification' });
+}
 });
-
 
 // receive new block
 app.post('/receive-new-block', function(req, res) {
@@ -321,16 +313,15 @@ app.post('/transaction/broadcast', function(req, res) {
   {
     for (j=0;j<sectors[verification_sector[i]].length;++j)
     {
-      urlss[i+j]=sectors[verification_sector[i]][j];
-      veri=veri+" "+sectors[verification_sector[i]][j];
+      urlss.push(sectors[verification_sector[i]][j]);
+      veri=veri+" "+(sectors[verification_sector[i]][j]+1);
     }
   }
   console.log("veri"+veri);
 
   for (i=0;i<sectors[mining_sector].length;++i)
   {urlss.push(sectors[mining_sector][i]);
-  mini=mini+" "+sectors[mining_sector][i];
-mine_urls.push(sectors[mining_sector][i])}
+  mini=mini+" "+(sectors[mining_sector][i]+1);}
   console.log("mini"+mini);
 
   //urls for verification
@@ -396,9 +387,21 @@ app.post('/sector/broadcast', function(req, res) {
 });
 
 
-var a=0;
+
 app.post('/verify', function(req, res) {
-a+=1;
+  var c1=0;
+  var c2=0;
+  var c3=0;
+  // if(bitcoin.in_array(ver1,(port%100)))
+  // {c1+=1}
+  // if(bitcoin.in_array(ver2,(port%100)))
+  // {c2+=1}
+  // if(bitcoin.in_array(ver3,(port%100)))
+  // {c3+=1}
+  // if(c1>=1 && c2>=1 && c3>=1) //changeeeeeeeee whennnchangee number of nodes.................
+  //  {/////
+  //  }
+   a+=1;
 console.log("a=="+a);
 res.json({ note: 'verification notification received' });
 });
@@ -406,12 +409,26 @@ res.json({ note: 'verification notification received' });
 
 app.get('/verification-broadcast', function(req, res) {
   const requestPromises = [];
+  var min=bitcoin.sector_list[0].minee;//
+  //console.log(min);
+  var word="";
+  min=min+" "
+  for(i=1;i<min.length;i++)
+  {if (min[i]==' ')
+  {mine_urls.push(word);
+    word="";
+  }
+  else{
+    word+=min[i];
+  }}
+  console.log(mine_urls);
   bitcoin.networkNodes.forEach(networkNodeUrl => {
-    if (bitcoin.in_array(mine_urls,networkNodeUrl[19]+networkNodeUrl[20]))
+    var ab=networkNodeUrl[19]+networkNodeUrl[20];
+    if (bitcoin.in_array(mine_urls,ab))
     { console.log("hi");
 		const requestOptions = {
 			uri: networkNodeUrl + '/verify',
-
+      method: 'POST',
 			json: true
 		};
 		requestPromises.push(rp(requestOptions));

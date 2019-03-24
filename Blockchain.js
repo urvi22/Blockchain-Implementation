@@ -245,7 +245,7 @@ Blockchain.prototype.shuffle= function(array){
 	}
 Blockchain.prototype.in_array = function(arr,n){
 for (var i =0;i<arr.length;i++)
-	{if (arr[i]==n)
+	{if (	parseInt(arr[i])==parseInt(n))
 			{	return 1;
 				break;
 			}
@@ -303,10 +303,5 @@ Blockchain.prototype.alocate_nsector= function(arr,nNode){
 	arr[ind][min]=nNode;
   return arr;
 };
-
-
-
-
-
 
 module.exports = Blockchain;
