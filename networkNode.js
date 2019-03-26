@@ -21,8 +21,19 @@ app.get('/blockchain', function (req, res) {
 });
 
 app.get('/startnode',function (req , res) {
-  console.log("fd");
-  shell.exec("concurrently \"npm run node_3\"", {silent:true}).stdout;
+  console.log(" starting nodes ");
+  nodestostart=req.body.nodes;
+  var command="\\\"concurrently ";
+  var add=" \"npm run node_";
+  var endit="\\\*"
+  for (var i = 1; i <= nodestostart; i++) {
+    command=command+add+toString(i)+endit
+  }
+  command=command+"\""
+
+  shell.exec(command, {silent:true}).stdout;
+  console.log(command);
+  // "concurrently \"npm run node_1\" \"npm run node_2\" "
 })
 
 // create a new transaction
