@@ -9,4 +9,4 @@ import postman collection from blockchain.postman_collection.
 
 startnode : url to start node.
 
-To close a used port: killall -9 node .
+To close a used port: killall -9 node or sudo pkill node

@@ -80,19 +80,20 @@
 	<br>
 
 <div class="start-all" id = "start-all">
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter number of nodes to run </p> <input type="text" id="start" name="nodes">
-  <a href= "http://localhost:3002/startnode" target="_blank"><button onclick="startallnodes()" class="btn btn-primary margin-auto btn-search">Start all nodes</button></a>
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter number of nodes to run </p> <input type="text" id="start2" name="nodes">
+  <a href= "http://localhost:3001/blockchain" target="_blank"><button onclick="startallnodes()" class="btn btn-primary margin-auto btn-search">Start all nodes</button></a>
 
   <script>
     function startallnodes() {
-      var w= document.getElementById('start').value;
-
+      var w= document.getElementById('start2').value;
+			// console.log(w);
       var formData = {
-     'nodes': w
+     "nodes": w
+
   };
 
       $.ajax({
-           url: z,
+           url: "http://localhost:3001/startnode",
            type: 'POST',
            dataType: 'json',
            data: formData

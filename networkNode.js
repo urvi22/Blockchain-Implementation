@@ -20,17 +20,23 @@ app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
-app.get('/startnode',function (req , res) {
+app.post('/startnode',function (req , res) {
   console.log(" starting nodes ");
   nodestostart=req.body.nodes;
-  var command="\\\"concurrently ";
+  // console.log(req.body.nodes);
+  var command="concurrently";
   var add=" \"npm run node_";
-  var endit="\\\*"
-  for (var i = 1; i <= nodestostart; i++) {
-    command=command+add+toString(i)+endit
-  }
-  command=command+"\""
+  var endit="\" "
+  for (var i = 2; i <= nodestostart; i++) {
+    command=command+add+JSON.stringify(i)+endit
+    // console.log("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"");
+    // shell.exec("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"", {silent:true}).stdout;
 
+  }
+
+  command=command.toString()
+  command="npm run start"
+  // shell.exec(npm config set javaScript-blockchain:runall 9090)
   shell.exec(command, {silent:true}).stdout;
   console.log(command);
   // "concurrently \"npm run node_1\" \"npm run node_2\" "
