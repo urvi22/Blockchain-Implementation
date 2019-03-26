@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Block Explorer</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+</head>
+<br>
+<body>
+	<div class="start">
+	<a href="http://localhost:3001/startnode" target="_blank"><button class="btn btn-primary margin-auto btn-search">Start nodes</button></a>
+	</div>
+	<br>
+
+
+
+	<div class="hit">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter node server/name: </p><input type="text" id="id" name="node">
+			<select id="options" class="dd">
+       <option value="blockchain">View Block</option>
+       <option value="mine">Mine New Block</option>
+       <option value="transaction">Transactions</option>
+     </select><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="myFunction()" class="btn btn-primary margin-auto btn-search">DO IT</button>
+			<br>
+
+
+
+<script>
+	function myFunction() {
+  var x = document.getElementById("id").value;
+	var y = document.getElementById("options").value;
+	var z = "http://localhost:"+x+"/"+y;
+  window.open(z, "_blank");
+}
+</script>
+</div>
+
+<div class="transaction">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter amount of transations: </p><input type="text" id="amount" name="amount">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter sender address: </p><input type="text" id="sender" name="sender">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter reciever address: </p><input type="text" id="recipient" name="reciever">
+  <button onclick="posttransactions()" class="btn btn-primary margin-auto btn-search">DO IT</button>
+
+  <script>
+  	function posttransactions() {
+    var w= document.getElementById('amount').value;
+    var x = document.getElementById('sender').value;
+  	var y = document.getElementById("recipient").value;
+  	var z = "http://localhost:"+"3001"+"/"+"transaction/broadcast";
+
+    var formData = {
+   'amount':w,
+   'sender':x,
+   'recipient':y
+};
+    // window.open(z, "_blank");
+
+
+      $.ajax({
+         url: z,
+         type: 'POST',
+         dataType: 'json',
+         data: formData
+      }).done(function(data) {
+         // Call your open_popup() function here
+      });
+
+  }
+  </script>
+
+
+
+
+
+
+
+
+
+
+
+</div>
+
+</body>
+
+</html>
