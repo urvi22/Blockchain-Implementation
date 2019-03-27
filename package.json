@@ -18,15 +18,19 @@
     "node_10": "nodemon --watch . -e js ./networkNode.js 3010 http://localhost:3010",
     "node_11": "nodemon --watch . -e js ./networkNode.js 3011 http://localhost:3011",
     "node_12": "nodemon --watch . -e js ./networkNode.js 3012 http://localhost:3012",
-    "start": "concurrently \"npm run node_1\" \"npm run node_2\" \"npm run node_3\" \"npm run node_4\" \"npm run node_5\" \"npm run node_6\" \"npm run node_7\" \"npm run node_8\" \"npm run node_9\" \"npm run node_10\" \"npm run node_11\" \"npm run node_12\""
+    "start": "concurrently \"npm run node_1\" \"npm run node_2\" \"npm run node_3\" \"npm run node_4\" \"npm run node_5\" \"npm run node_6\" \"npm run node_7\" \"npm run node_8\" \"npm run node_9\" \"npm run node_10\" \"npm run node_11\" \"npm run node_12\"",
+    "start1": "npm-run-all --parallel node_3 node_4",
+    "start2": "npm-run-all --parallel node_1 node_2"
   },
   "author": "",
   "license": "ISC",
   "dependencies": {
     "body-parser": "^1.18.2",
     "concurrently": "^4.1.0",
+    "edit-json-file": "^1.2.1",
     "express": "^4.16.3",
     "nodemon": "^1.17.3",
+    "npm-run-all": "^4.1.5",
     "request": "^2.88.0",
     "request-promise": "^4.2.4",
     "sha256": "^0.2.0",
