@@ -23,11 +23,12 @@ app.get('/blockchain', function (req, res) {
 app.post('/startnode',function (req , res) {
   console.log(" starting nodes ");
   nodestostart=req.body.nodes;
-  // console.log(req.body.nodes);
+  console.log("node to start" + req.body.nodes);
   var command="concurrently";
   var add=" \"npm run node_";
   var endit="\" "
-  for (var i = 2; i <= nodestostart; i++) {
+  console.log(bitcoin.networkNodes.length+1);
+  for (var i = bitcoin.networkNodes.length+1; i < parseInt(bitcoin.networkNodes.length)+parseInt(nodestostart)+1; i++) {
     command=command+add+JSON.stringify(i)+endit
     // console.log("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"");
     // shell.exec("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"", {silent:true}).stdout;
@@ -35,10 +36,13 @@ app.post('/startnode',function (req , res) {
   }
 
   command=command.toString()
-  command="npm run start"
+  console.log(command);
+  // command="npm run start"
   // shell.exec(npm config set javaScript-blockchain:runall 9090)
   shell.exec(command, {silent:true}).stdout;
-  console.log(command);
+
+
+
   // "concurrently \"npm run node_1\" \"npm run node_2\" "
 })
 
@@ -123,37 +127,51 @@ app.post('/receive-new-block', function(req, res) {
 
 nodes=[];
 // register a node and broadcast it the network
+var node_bro=1;
 app.post('/register-and-broadcast-node', function(req, res) {
-	const newNodeUrl = req.body.newNodeUrl;
+
+	 const newNodeUrl = "http://localhost:300"+JSON.stringify(node_bro);
+   node_bro=node_bro+1;
+   //
+   console.log(newNodeUrl);
   // console.log("nodes are= " + networkNodes[4]);
-	if (bitcoin.networkNodes.indexOf(newNodeUrl) == -1) bitcoin.networkNodes.push(newNodeUrl);
+   // console.log(newNodeUrl[17]+newNodeUrl[18]+newNodeUrl[19]+newNodeUrl[20]);
+   // console.log(port);
+    if (newNodeUrl[17]+newNodeUrl[18]+newNodeUrl[19]+newNodeUrl[20]==port) {
+      res.json({ note: 'CURRENT NODE == NEW NODE' });
+    }
+    else {
+      if (bitcoin.networkNodes.indexOf(newNodeUrl) == -1) bitcoin.networkNodes.push(newNodeUrl);
 
-	const regNodesPromises = [];
-	bitcoin.networkNodes.forEach(networkNodeUrl => {
-		const requestOptions = {
-			uri: networkNodeUrl + '/register-node',
-			method: 'POST',
-			body: { newNodeUrl: newNodeUrl },
-			json: true
-		};
+    	const regNodesPromises = [];
+    	bitcoin.networkNodes.forEach(networkNodeUrl => {
+    		const requestOptions = {
+    			uri: networkNodeUrl + '/register-node',
+    			method: 'POST',
+    			body: { newNodeUrl: newNodeUrl },
+    			json: true
+    		};
 
-		regNodesPromises.push(rp(requestOptions));
-	});
+    		regNodesPromises.push(rp(requestOptions));
+    	});
 
-	Promise.all(regNodesPromises)
-	.then(data => {
-		const bulkRegisterOptions = {
-			uri: newNodeUrl + '/register-nodes-bulk',
-			method: 'POST',
-			body: { allNetworkNodes: [ ...bitcoin.networkNodes, bitcoin.currentNodeUrl ] },
-			json: true
-		};
+    	Promise.all(regNodesPromises)
+    	.then(data => {
+    		const bulkRegisterOptions = {
+    			uri: newNodeUrl + '/register-nodes-bulk',
+    			method: 'POST',
+    			body: { allNetworkNodes: [ ...bitcoin.networkNodes, bitcoin.currentNodeUrl ] },
+    			json: true
+    		};
 
-		return rp(bulkRegisterOptions);
-	})
-	.then(data => {
-		res.json({ note: 'New node registered with network successfully.' });
-	});
+    		return rp(bulkRegisterOptions);
+    	})
+    	.then(data => {
+    		res.json({ note: 'New node registered with network successfully.' });
+    	});
+
+    }
+
 });
 
 
@@ -426,7 +444,7 @@ app.post('/verification-broadcast', function(req, res) {
   	};
 
   const requestPromises = [];
-  var min=bitcoin.sector_list[0].minee;///////////
+  var min=bitcoin.sector_list[a].minee;///////////
   var word="";
   min=min+" ";
   for(i=1;i<min.length;i++)
