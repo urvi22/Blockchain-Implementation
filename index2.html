@@ -149,19 +149,26 @@
 </div><br>
 
 <div class="transaction" id= "transation">
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter node server/name: </p><input type="text" id="server" name="node">
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter transaction id </p><input type="text" id="transid" name="reciever">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter amount of transations: </p><input type="text" id="amount" name="amount">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter sender address: </p><input type="text" id="sender" name="sender">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter reciever address: </p><input type="text" id="recipient" name="reciever">
+
+
   <button onclick="posttransactions()" class="btn btn-primary margin-auto btn-search">SUBMIT</button><br>
 
   <script>
   	function posttransactions() {
+		var a = document.getElementById("transid").value;
+		var b = document.getElementById("server").value;
     var w= document.getElementById('amount').value;
     var x = document.getElementById('sender').value;
   	var y = document.getElementById("recipient").value;
-  	var z = "http://localhost:"+"3001"+"/"+"transaction/broadcast";
+  	var z = "http://localhost:"+b+"/"+"transaction/broadcast";
 
     var formData = {
+	 'transactionid':a,
    'amount':w,
    'sender':x,
    'recipient':y
