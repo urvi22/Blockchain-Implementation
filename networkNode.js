@@ -129,15 +129,23 @@ nodes=[];
 // register a node and broadcast it the network
 var node_bro=1;
 app.post('/register-and-broadcast-node', function(req, res) {
+  if(node_bro<=9)
+  {
+    //res.json({ note: 'aya' });
+	   const newNodeUrl = "http://localhost:300"+JSON.stringify(node_bro);
+    //res.json({ note: `${newNodeUrl}` });
 
-	 const newNodeUrl = "http://localhost:300"+JSON.stringify(node_bro);
+  }
+  else if(node_bro>9){
+	const newNodeUrl = "http://localhost:30"+JSON.stringify(node_bro);}
+  
    node_bro=node_bro+1;
    //
    console.log(newNodeUrl);
   // console.log("nodes are= " + networkNodes[4]);
    // console.log(newNodeUrl[17]+newNodeUrl[18]+newNodeUrl[19]+newNodeUrl[20]);
    // console.log(port);
-    if (newNodeUrl[17]+newNodeUrl[18]+newNodeUrl[19]+newNodeUrl[20]==port) {
+    if (parseInt(newNodeUrl[17]+newNodeUrl[18]+newNodeUrl[19]+newNodeUrl[20])==port) {
       res.json({ note: 'CURRENT NODE == NEW NODE' });
     }
     else {
