@@ -54,7 +54,7 @@ var c3=0;
 var verified_sectors_count=0;//verication count-------------------
 // mine a block
 app.get('/mine', function(req, res) {
-
+//netwroknodes/2 ki ceil
   if(c1>=1 && c2>=1 && c3>=1) //changeeeeeeeee whennnchangee number of nodes..............
     {
       verified_sectors_count=1;
@@ -329,10 +329,10 @@ app.get('/sector_allocation' , function (req , res) {
 veri =""
 mini=""
 mine_urls=[]
-// broadcast transaction
+// broadcast transaction.
 app.post('/transaction/broadcast', function(req, res) {
-	const newTransaction = bitcoin.createNewTransaction(req.body.amount, req.body.sender, req.body.recipient);
-	bitcoin.addTransactionToPendingTransactions(newTransaction);
+	const newTransaction = bitcoin.createNewTransaction(req.body.transactionid,req.body.amount, req.body.sender, req.body.recipient);
+	bitcoin.addTransactionToPendingTransactions(newTransaction);///////hatana hai shayad
 
 	const requestPromises = [];
   const urlss=[]
@@ -345,7 +345,7 @@ app.post('/transaction/broadcast', function(req, res) {
       veri=veri+" "+(sectors[verification_sector[i]][j]+1);
     }
   }
-  console.log("veri"+veri);
+  console.log("veri."+veri);
 
   for (i=0;i<sectors[mining_sector].length;++i)
   {urlss.push(sectors[mining_sector][i]);
@@ -363,8 +363,8 @@ app.post('/transaction/broadcast', function(req, res) {
   console.log("all urls="+bitcoin.networkNodes);
 
 	bitcoin.networkNodes.forEach(networkNodeUrl => {
-
-    if (bitcoin.in_array(urlss,networkNodeUrl[20]))
+    var ad=networkNodeUrl[19]+networkNodeUrl[20]
+    if (bitcoin.in_array(urlss,ad))
     {
 		const requestOptions = {
 			uri: networkNodeUrl + '/transaction',
@@ -416,14 +416,17 @@ app.post('/sector/broadcast', function(req, res) {
 
 
 
-app.get('/verification-broadcast', function(req, res) {
+app.post('/verification-broadcast', function(req, res) {
   var pi=port%100;
+  var a=Math.floor((req.body.transactionid)/5);
+  console.log("a............."+a);
   const	p = {
   		port: pi,
+      sector_id:a
   	};
 
   const requestPromises = [];
-  var min=bitcoin.sector_list[0].minee;
+  var min=bitcoin.sector_list[0].minee;///////////
   var word="";
   min=min+" ";
   for(i=1;i<min.length;i++)
@@ -462,8 +465,8 @@ app.get('/verification-broadcast', function(req, res) {
 
 app.post('/verify', function(req, res) {
   const p = req.body.port;
-
-  var min=bitcoin.sector_list[0].veri;
+  const a = req.body.sector_id;
+  var min=bitcoin.sector_list[a].veri;
   ver_urls=[];
   ver1=[];
   ver2=[];

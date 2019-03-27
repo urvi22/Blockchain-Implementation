@@ -42,8 +42,8 @@ users.push("A")
 users_amount.push(10)
 
 
-
-Blockchain.prototype.createNewTransaction = function(amount, sender, recipient) {
+//
+Blockchain.prototype.createNewTransaction = function(transactionid,amount, sender, recipient) {
 var ver=0;
 if (this.enough_amount(amount,sender,recipient))
 	{
@@ -59,7 +59,7 @@ const	newTransaction = {
 		amount: amount,
 		sender: sender,
 		recipient: recipient,
-		transactionId: uuid().split('-').join(''),
+		transactionId: transactionid,
 		verification_done:ver
 	};
 
