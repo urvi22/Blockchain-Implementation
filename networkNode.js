@@ -127,20 +127,22 @@ app.post('/receive-new-block', function(req, res) {
 
 nodes=[];
 // register a node and broadcast it the network
-var node_bro=1;
+var node_bro=2;
 app.post('/register-and-broadcast-node', function(req, res) {
+  // console.log(node_bro);
+  // console.log(req.body.newNodeUrl);
   if(node_bro<=9)
   {
     //res.json({ note: 'aya' });
-	   const newNodeUrl = "http://localhost:300"+JSON.stringify(node_bro);
+	    newNodeUrl = "http://localhost:300"+JSON.stringify(node_bro);
     //res.json({ note: `${newNodeUrl}` });
 
   }
   else if(node_bro>9){
-	const newNodeUrl = "http://localhost:30"+JSON.stringify(node_bro);}
-  
+	 newNodeUrl = "http://localhost:30"+JSON.stringify(node_bro);}
+
    node_bro=node_bro+1;
-   //
+
    console.log(newNodeUrl);
   // console.log("nodes are= " + networkNodes[4]);
    // console.log(newNodeUrl[17]+newNodeUrl[18]+newNodeUrl[19]+newNodeUrl[20]);
