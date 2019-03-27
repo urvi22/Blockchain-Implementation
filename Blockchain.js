@@ -62,8 +62,8 @@ const	newTransaction = {
 		transactionId: transactionid,
 		verification_done:ver
 	};
-
-  return newTransaction;
+if(ver==1){
+  return newTransaction;}
 };
 
 
@@ -100,7 +100,15 @@ Blockchain.prototype.enough_amount = function(amount,sen,res){
 		users.push(res)
 		users_amount.push(0)
 	}
-	console.log("user="+users);
+	console.log("user=="+users);
+};
+
+Blockchain.prototype.update_money= function(){
+			this.chain.forEach(block => {
+		if (block.transactions.amount === blockHash)
+		correctBlock = block;
+	});
+
 };
 
 Blockchain.prototype.addTransactionToPendingTransactions = function(transactionObj) {
@@ -246,6 +254,15 @@ Blockchain.prototype.shuffle= function(array){
 Blockchain.prototype.in_array = function(arr,n){
 for (var i =0;i<arr.length;i++)
 	{if (	parseInt(arr[i])==parseInt(n))
+			{	return 1;
+				break;
+			}
+	}
+}
+
+Blockchain.prototype.in_array_string = function(arr,n){
+for (var i =0;i<arr.length;i++)
+	{if (	(arr[i])==(n))
 			{	return 1;
 				break;
 			}

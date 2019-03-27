@@ -84,13 +84,14 @@ var verified_sectors_count=0;//verication count-------------------
 // mine a block
 app.get('/mine', function(req, res) {
 //netwroknodes/2 ki ceil
-  if(c1>=1 && c2>=1 && c3>=1) //changeeeeeeeee whennnchangee number of nodes..............
+var len=Math.ceil(bitcoin.networkNodes.length/2);
+  if(c1>=len && c2>=len && c3>=len) //changeeeeeeeee whennnchangee number of nodes..............
     {
       verified_sectors_count=1;
       console.log("verified_sectors_count=="+verified_sectors_count);
+
     }
 
-  if(verified_sectors_count==1){
 	const lastBlock = bitcoin.getLastBlock();
 	const previousBlockHash = lastBlock['hash'];
 
@@ -100,6 +101,7 @@ app.get('/mine', function(req, res) {
 	};
 	const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData);
 	const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+  if(verified_sectors_count==1){
 	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
 
 	const requestPromises = [];
@@ -137,6 +139,7 @@ app.post('/receive-new-block', function(req, res) {
 
 	if (correctHash && correctIndex) {
 		bitcoin.chain.push(newBlock);
+    //bitcoin.update_money();
 		bitcoin.pendingTransactions = [];
 		res.json({
 			note: 'New block received and accepted.',
@@ -524,6 +527,7 @@ app.post('/verify', function(req, res) {
   ver1=[];
   ver2=[];
   ver3=[];
+  var len=bitcoin.networkNodes.length;
 
   var word="";
   min=min+" "
@@ -541,12 +545,23 @@ app.post('/verify', function(req, res) {
     }
   }
   //console.log(ver_urls);
-  ver1.push(ver_urls[0]);
-  ver1.push(ver_urls[1]);
-  ver2.push(ver_urls[2]);
-  ver2.push(ver_urls[3]);
-  ver3.push(ver_urls[4]);
-  ver3.push(ver_urls[5]);
+  for (var i=0;i<len;i++)
+  {  ver1.push(ver_urls[i]);
+    if(i==len)
+    break;
+      ver2.push(ver_urls[i++]);
+      if(i==len)
+      break;
+      ver3.push(ver_urls[i++]);
+      if(i==len)
+      break;}
+  //
+  // ver1.push(ver_urls[0]);
+  // ver1.push(ver_urls[1]);
+  // ver2.push(ver_urls[2]);
+  // ver2.push(ver_urls[3]);
+  // ver3.push(ver_urls[4]);
+  // ver3.push(ver_urls[5]);
 
   //console.log("port "+p);
 
