@@ -6,10 +6,14 @@ const uuid = require('uuid/v1');
 const port = process.argv[2];
 const rp = require('request-promise');
 const nodeAddress = uuid().split('-').join('');
-
+const editJsonFile = require("edit-json-file");
 const bitcoin = new Blockchain();
 var shell = require('shelljs');
 // shell.echo('hello world');
+
+
+let file = editJsonFile(`/home/sanchi/Desktop/minor2/package.json`);
+// console.log(file.get());
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -23,6 +27,7 @@ app.get('/blockchain', function (req, res) {
 app.post('/startnode',function (req , res) {
   console.log(" starting nodes ");
   nodestostart=req.body.nodes;
+<<<<<<< Updated upstream
   console.log("node to start" + req.body.nodes);
   var command="concurrently";
   var add=" \"npm run node_";
@@ -30,11 +35,19 @@ app.post('/startnode',function (req , res) {
   console.log(bitcoin.networkNodes.length+1);
   for (var i = bitcoin.networkNodes.length+1; i < parseInt(bitcoin.networkNodes.length)+parseInt(nodestostart)+1; i++) {
     command=command+add+JSON.stringify(i)+endit
+=======
+  // console.log(req.body.nodes);
+  var command="concurrently \"npm run node_1\" \"npm run node_2\" \"npm run node_3\" \"npm run node_4\" \"npm run node_5\" \"npm run node_6\" \"npm run node_7\" \"npm run node_8\" \"npm run node_9\" \"npm run node_10\" \"npm run node_11\" \"npm run node_12\"";
+  // var add=" \"npm run node_";
+  // var endit="\" "
+  // for (var i = 2; i <= nodestostart; i++) {
+  //   command=command+add+JSON.stringify(i)+endit
+>>>>>>> Stashed changes
     // console.log("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"");
     // shell.exec("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"", {silent:true}).stdout;
 
-  }
 
+<<<<<<< Updated upstream
   command=command.toString()
   console.log(command);
   // command="npm run start"
@@ -43,7 +56,19 @@ app.post('/startnode',function (req , res) {
 
 
 
+=======
+
+  // command=command.toString()
+  // command="npm run start1"
+  // command2="npm run node_4"
+  // shell.exec(npm config set javaScript-blockchain:runall 9090)
+  shell.exec(command, {silent:true}).stdout;
+  // shell.exec(command2, {silent:true}).stdout;
+  // console.log(command);
+>>>>>>> Stashed changes
   // "concurrently \"npm run node_1\" \"npm run node_2\" "
+  // res.json({ note: `Transaction will be added in block` });
+
 })
 
 // create a new transaction
