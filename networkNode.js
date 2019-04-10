@@ -4,6 +4,11 @@ const bodyParser = require('body-parser');
 const Blockchain = require('./Blockchain');
 const uuid = require('uuid/v1');
 const port = process.argv[2];
+// let port = process.env.PORT;
+// if (port == null || port == "") {
+//   port = 5000;
+// }
+
 const rp = require('request-promise');
 const nodeAddress = uuid().split('-').join('');
 const editJsonFile = require("edit-json-file");
