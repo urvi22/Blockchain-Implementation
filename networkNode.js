@@ -10,7 +10,7 @@ const editJsonFile = require("edit-json-file");
 const bitcoin = new Blockchain();
 var shell = require('shelljs');
 // shell.echo('hello world');
-
+console.log("port is " + port);
 
 // let file = editJsonFile(`/home/sanchi/Desktop/minor2/package.json`);
 // console.log(file.get());
@@ -25,7 +25,7 @@ app.get('/blockchain', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-  res.render('index2');
+  res.render('index2.html');
 });
 // app.post('/startnode',function (req , res) {
 //   console.log(" starting nodes ");
