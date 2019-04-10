@@ -12,7 +12,7 @@ var shell = require('shelljs');
 // shell.echo('hello world');
 
 
-let file = editJsonFile(`/home/sanchi/Desktop/minor2/package.json`);
+// let file = editJsonFile(`/home/sanchi/Desktop/minor2/package.json`);
 // console.log(file.get());
 
 app.use(bodyParser.json());
@@ -24,36 +24,36 @@ app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
-app.post('/startnode',function (req , res) {
-  console.log(" starting nodes ");
-  nodestostart=req.body.nodes;
-
-  // console.log("node to start" + req.body.nodes);
-  // var command="concurrently";
-  // var add=" \"npm run node_";
-  // var endit="\" "
-  // console.log(bitcoin.networkNodes.length+1);
-  // for (var i = bitcoin.networkNodes.length+1; i < parseInt(bitcoin.networkNodes.length)+parseInt(nodestostart)+1; i++) {
-  //   command=command+add+JSON.stringify(i)+endit
-
-  // console.log(req.body.nodes);
-  var command="npm run start";
-  // var add=" \"npm run node_";
-  // var endit="\" "
-  // for (var i = 2; i <= nodestostart; i++) {
-  //   command=command+add+JSON.stringify(i)+endit
-
-    // console.log("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"");
-    // shell.exec("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"", {silent:true}).stdout;
-
-  command=command.toString()
-  console.log(command);
-  // command="npm run start"
-  // shell.exec(npm config set javaScript-blockchain:runall 9090)
-  shell.exec(command, {silent:true}).stdout;
-
-
-})
+// app.post('/startnode',function (req , res) {
+//   console.log(" starting nodes ");
+//   nodestostart=req.body.nodes;
+//
+//   // console.log("node to start" + req.body.nodes);
+//   // var command="concurrently";
+//   // var add=" \"npm run node_";
+//   // var endit="\" "
+//   // console.log(bitcoin.networkNodes.length+1);
+//   // for (var i = bitcoin.networkNodes.length+1; i < parseInt(bitcoin.networkNodes.length)+parseInt(nodestostart)+1; i++) {
+//   //   command=command+add+JSON.stringify(i)+endit
+//
+//   // console.log(req.body.nodes);
+//   var command="npm run start";
+//   // var add=" \"npm run node_";
+//   // var endit="\" "
+//   // for (var i = 2; i <= nodestostart; i++) {
+//   //   command=command+add+JSON.stringify(i)+endit
+//
+//     // console.log("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"");
+//     // shell.exec("concurrently \"npm run node_"+JSON.stringify(i)+"\""+ " "+ "\"npm run node_"+JSON.stringify(i+1)+"\"", {silent:true}).stdout;
+//
+//   command=command.toString()
+//   console.log(command);
+//   // command="npm run start"
+//   // shell.exec(npm config set javaScript-blockchain:runall 9090)
+//   shell.exec(command, {silent:true}).stdout;
+//
+//
+// })
 
 // create a new transaction
 app.post('/transaction', function(req, res) {
