@@ -5,22 +5,7 @@
   "main": "Blockchain.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "server": "nodemon --watch . -e js ./networkNode.js 3000 http://localhost:3000",
-    "node_1": "nodemon --watch . -e js ./networkNode.js 3001 http://localhost:3001",
-    "node_2": "nodemon --watch . -e js ./networkNode.js 3002 http://localhost:3002",
-    "node_3": "nodemon --watch . -e js ./networkNode.js 3003 http://localhost:3003",
-    "node_4": "nodemon --watch . -e js ./networkNode.js 3004 http://localhost:3004",
-    "node_5": "nodemon --watch . -e js ./networkNode.js 3005 http://localhost:3005",
-    "node_6": "nodemon --watch . -e js ./networkNode.js 3006 http://localhost:3006",
-    "node_7": "nodemon --watch . -e js ./networkNode.js 3007 http://localhost:3007",
-    "node_8": "nodemon --watch . -e js ./networkNode.js 3008 http://localhost:3008",
-    "node_9": "nodemon --watch . -e js ./networkNode.js 3009 http://localhost:3009",
-    "node_10": "nodemon --watch . -e js ./networkNode.js 3010 http://localhost:3010",
-    "node_11": "nodemon --watch . -e js ./networkNode.js 3011 http://localhost:3011",
-    "node_12": "nodemon --watch . -e js ./networkNode.js 3012 http://localhost:3012",
-    "start": "concurrently \"npm run node_1\" \"npm run node_2\" \"npm run node_3\" \"npm run node_4\" \"npm run node_5\" \"npm run node_6\" \"npm run node_7\" \"npm run node_8\" \"npm run node_9\" \"npm run node_10\" \"npm run node_11\" \"npm run node_12\"",
-    "start1": "npm-run-all --parallel node_3 node_4",
-    "start2": "npm-run-all --parallel node_1 node_2"
+    "node_1": "nodemon --watch . -e js ./networkNode.js 3001 http://localhost:3001"
   },
   "author": "",
   "license": "ISC",
