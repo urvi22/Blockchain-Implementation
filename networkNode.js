@@ -25,7 +25,7 @@ app.get('/blockchain', function (req, res) {
 });
 
 app.get('/', function (req, res) {
-  res.send(bitcoin);
+  res.render('index2');
 });
 // app.post('/startnode',function (req , res) {
 //   console.log(" starting nodes ");
