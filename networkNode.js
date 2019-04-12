@@ -11,6 +11,7 @@ const bitcoin = new Blockchain();
 var shell = require('shelljs');
 // shell.echo('hello world');
 const path = require('path');
+const request = require('request');
 
 
 console.log("port is " + port);
@@ -203,6 +204,7 @@ app.post('/register-and-broadcast-node', function(req, res) {
 });
 
 
+
 // register a node with the network
 app.post('/register-node', function(req, res) {
 	const newNodeUrl = req.body.newNodeUrl;
@@ -320,15 +322,18 @@ mine_urls=[]
 verification_sector=[]
 mining_sector=[]
 transaction_count=0
-transaction_limit=1
+transaction_limit=5
+start=1;
+sectors=[];
 app.post('/transaction/broadcast', function(req, res) {
 
   transaction_count+=1
-  if(transaction_count%transaction_limit==0)
+  if(transaction_count%(transaction_limit+1)==1)
   {
     ret=bitcoin.sector_allocation()
-    verification_sector=ret[0];
-    mining_sector=ret[1];
+    sectors=ret[0];
+    verification_sector=ret[1];
+    mining_sector=ret[2];
   }
 
 	const newTransaction = bitcoin.createNewTransaction(req.body.transactionid,req.body.amount, req.body.sender, req.body.recipient);
@@ -380,8 +385,18 @@ app.post('/transaction/broadcast', function(req, res) {
 
 	Promise.all(requestPromises)
 	.then(data => {
-		res.json({ note: 'Transaction created and broadcast successfully.' });
+		//res.json({ note: 'Transaction created and broadcast successfully.' });
 	});
+  print_json="Transaction and sector created and broadcast successfully";
+  request('http://localhost:3002/sector/broadcast', { json: true }, (err, res, body) => {
+    if (err) { return console.log(err); }
+    // console.log(res);
+  // send(res.body);
+  //print_json=res.body;
+  //
+
+});
+res.json(print_json);
 });
 
 app.post('/sector', function(req, res) {
@@ -390,8 +405,11 @@ app.post('/sector', function(req, res) {
 	res.json({ note: `Sector will be added ${blockIndex}.` });
 });
 
-app.post('/sector/broadcast', function(req, res) {
-	const newsector = bitcoin.createNewSector(req.body.indices, veri, mini);
+
+app.get('/sector/broadcast', function(req, res) {
+
+  indices=port+"="+start+"-"+(start+transaction_limit-1);
+	const newsector = bitcoin.createNewSector(indices, veri, mini);
 	bitcoin.addSectorsToSectors_list(newsector);
 
 	const requestPromises = [];

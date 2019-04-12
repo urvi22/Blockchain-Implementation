@@ -383,7 +383,7 @@ Blockchain.prototype.sector_allocation= function(port)
 
   console.log("mining sector is = " + mining_sector);
   console.log("verification sectors are = " + verification_sector);
-	return [verification_sector , mining_sector];
+	return [sectors, verification_sector , mining_sector];
 }
 
 module.exports = Blockchain;
