@@ -272,8 +272,11 @@ for (var i =0;i<arr.length;i++)
 Blockchain.prototype.allot_sectors = function(port,nodes){
 	networkNodes=[];
 		networkNodes.push(port%100);
+
 		for(i=0;i<nodes.length;i++)
-		{networkNodes.push(nodes[i]);}
+		{
+			networkNodes.push(nodes[i]);
+		}
 		console.log("networkNodes"+networkNodes);
 
     var network_length = networkNodes.length;
@@ -320,5 +323,67 @@ Blockchain.prototype.alocate_nsector= function(arr,nNode){
 	arr[ind][min]=nNode;
   return arr;
 };
+
+
+Blockchain.prototype.sector_allocation= function(port)
+{
+	nodes=[]
+  this.networkNodes.forEach(networkNodeUrl => {
+
+    nodes.push(networkNodeUrl[19]+networkNodeUrl[20]);
+  });
+
+  sectors=this.allot_sectors(port,nodes);
+  // res.json({ note: `Blocks are alloted` });
+  console.log("sector are= " + sectors);
+  console.log("no of sectors = " + sectors.length);
+  var currentNodeId=port;                      // place Your current node id here
+  var currentNodeSector=0;
+  for (i=0;i<sectors.length;i++)
+  {
+      for (j=0;j<sectors[i].length;j++)
+      {
+        if(sectors[i][j]==currentNodeId)
+        {
+          currentNodeSector=i
+          break;
+        }
+      }
+  }
+  console.log("current node sector==" + currentNodeSector);
+
+  for (var a=[],i=0;i<sectors.length;++i)
+  {
+    a[i]=i;
+  }
+  a=this.shuffle(a)
+  var count=0;
+  var i=0;
+  for (i=0;i<sectors.length;i++)
+  {
+      if(count==sectors.length/2)
+      {
+          break;
+      }
+      if(a[i]!=currentNodeSector)
+      {
+          verification_sector[count]=a[i];
+          count++;
+      }
+
+  }
+
+  for (j=i;j<sectors.length;j++)
+  {
+    if(a[j]!=currentNodeSector)
+    {
+        mining_sector=a[j];
+    }
+  }
+
+  console.log("mining sector is = " + mining_sector);
+  console.log("verification sectors are = " + verification_sector);
+	return [verification_sector , mining_sector];
+}
 
 module.exports = Blockchain;
