@@ -337,7 +337,8 @@ Blockchain.prototype.sector_allocation= function(port)
   // res.json({ note: `Blocks are alloted` });
   console.log("sector are= " + sectors);
   console.log("no of sectors = " + sectors.length);
-  var currentNodeId=port;                      // place Your current node id here
+  var currentNodeId=port%100;
+	console.log("port is "+ currentNodeId);                 // place Your current node id here
   var currentNodeSector=0;
   for (i=0;i<sectors.length;i++)
   {

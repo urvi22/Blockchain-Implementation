@@ -330,7 +330,7 @@ app.post('/transaction/broadcast', function(req, res) {
   transaction_count+=1
   if(transaction_count%(transaction_limit+1)==1)
   {
-    ret=bitcoin.sector_allocation()
+    ret=bitcoin.sector_allocation(port)
     sectors=ret[0];
     verification_sector=ret[1];
     mining_sector=ret[2];
