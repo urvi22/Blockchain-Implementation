@@ -15,7 +15,11 @@ const editJsonFile = require("edit-json-file");
 const bitcoin = new Blockchain();
 var shell = require('shelljs');
 // shell.echo('hello world');
+const path = require('path');
+const request = require('request');
 
+
+console.log("port is " + port);
 
 // let file = editJsonFile(`/home/sanchi/Desktop/minor2/package.json`);
 // console.log(file.get());
@@ -29,8 +33,8 @@ app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
-app.get('/', function (req, res) {
-  res.send(bitcoin);
+app.get('/', function(req, res) {
+    res.sendFile(path.join(__dirname, 'index2.html'));
 });
 // app.post('/startnode',function (req , res) {
 //   console.log(" starting nodes ");
@@ -205,6 +209,7 @@ app.post('/register-and-broadcast-node', function(req, res) {
 });
 
 
+
 // register a node with the network
 app.post('/register-node', function(req, res) {
 	const newNodeUrl = req.body.newNodeUrl;
@@ -312,73 +317,30 @@ app.get('/block-explorer', function(req, res) {
 });
 
 
-var sectors=[]
-var mining_sector=[]
-app.get('/sector_allocation' , function (req , res) {
 
-  bitcoin.networkNodes.forEach(networkNodeUrl => {
 
-    nodes.push(networkNodeUrl[19]+networkNodeUrl[20]);
-  });
-
-  sectors=bitcoin.allot_sectors(port,nodes);
-  res.json({ note: `Blocks are alloted` });
-  console.log("sector are= " + sectors);
-  console.log("no of sectors = " + sectors.length);
-  var currentNodeId=port;                      // place Your current node id here
-  var currentNodeSector=0;
-  for (i=0;i<sectors.length;i++)
-  {
-      for (j=0;j<sectors[i].length;j++)
-      {
-        if(sectors[i][j]==currentNodeId)
-        {
-          currentNodeSector=i
-          break;
-        }
-      }
-  }
-  console.log("current node sector==" + currentNodeSector);
-
-  for (var a=[],i=0;i<sectors.length;++i)
-  {
-    a[i]=i;
-  }
-  a=bitcoin.shuffle(a)
-  var count=0;
-  var i=0;
-  for (i=0;i<sectors.length;i++)
-  {
-      if(count==sectors.length/2)
-      {
-          break;
-      }
-      if(a[i]!=currentNodeSector)
-      {
-          verification_sector[count]=a[i];
-          count++;
-      }
-
-  }
-
-  for (j=i;j<sectors.length;j++)
-  {
-    if(a[j]!=currentNodeSector)
-    {
-        mining_sector=a[j];
-    }
-  }
-
-  console.log("mining sector is = " + mining_sector);
-  console.log("verification sectors are = " + verification_sector);
-
-})
 
 veri =""
 mini=""
 mine_urls=[]
 // broadcast transaction.
+verification_sector=[]
+mining_sector=[]
+transaction_count=0
+transaction_limit=5
+start=1;
+sectors=[];
 app.post('/transaction/broadcast', function(req, res) {
+
+  transaction_count+=1
+  if(transaction_count%(transaction_limit+1)==1)
+  {
+    ret=bitcoin.sector_allocation(port)
+    sectors=ret[0];
+    verification_sector=ret[1];
+    mining_sector=ret[2];
+  }
+
 	const newTransaction = bitcoin.createNewTransaction(req.body.transactionid,req.body.amount, req.body.sender, req.body.recipient);
 	bitcoin.addTransactionToPendingTransactions(newTransaction);///////hatana hai shayad
 
@@ -428,8 +390,18 @@ app.post('/transaction/broadcast', function(req, res) {
 
 	Promise.all(requestPromises)
 	.then(data => {
-		res.json({ note: 'Transaction created and broadcast successfully.' });
+		//res.json({ note: 'Transaction created and broadcast successfully.' });
 	});
+  print_json="Transaction and sector created and broadcast successfully";
+  request('http://localhost:3002/sector/broadcast', { json: true }, (err, res, body) => {
+    if (err) { return console.log(err); }
+    // console.log(res);
+  // send(res.body);
+  //print_json=res.body;
+  //
+
+});
+res.json(print_json);
 });
 
 app.post('/sector', function(req, res) {
@@ -438,8 +410,11 @@ app.post('/sector', function(req, res) {
 	res.json({ note: `Sector will be added ${blockIndex}.` });
 });
 
-app.post('/sector/broadcast', function(req, res) {
-	const newsector = bitcoin.createNewSector(req.body.indices, veri, mini);
+
+app.get('/sector/broadcast', function(req, res) {
+
+  indices=port+"="+start+"-"+(start+transaction_limit-1);
+	const newsector = bitcoin.createNewSector(indices, veri, mini);
 	bitcoin.addSectorsToSectors_list(newsector);
 
 	const requestPromises = [];
