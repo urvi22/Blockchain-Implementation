@@ -1,0 +1,266 @@
+
+<html>
+
+<head>
+	<title>Block Explorer</title>
+	<script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.5.6/angular.min.js"></script>
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js" integrity="sha256-FgpCb/KJQlLNfOu91ta32o/NMZxltwRo8QtmkMRdAu8=" crossorigin="anonymous"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
+	<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+  <style>
+    ul {
+			list-style-type: none;
+			  margin: 0;
+			  padding: 0;
+			  width: 100%;
+			  background-color: #f1f1f1;
+			  height: 20%;
+			  overflow: auto; /* Enable scrolling if the sidenav has too much content*/
+    }
+
+		li {
+  float: left;
+}
+
+    li a {
+			display: inline;
+      color: #000;
+      padding: 8px 16px;
+      text-decoration: none;
+    }
+    li a:link {
+      color: green;
+      background-color: transparent;
+      text-decoration: none;
+    }
+    li a:visited {
+      color: pink;
+      background-color: transparent;
+      text-decoration: none;
+    }
+    li a:hover {
+      color: red;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+    li a:active {
+      color: yellow;
+      background-color: transparent;
+      text-decoration: underline;
+    }
+    </style>
+</head>
+<br>
+
+
+<body>
+
+	<ul>
+		<li><a href="#start">Start Node</a></li>
+		<li><a href="#startallnodes">Start All Nodes</a></li>
+		<li><a href="#hit">Search</a></li>
+		<li><a href="#transation">Transactions</a></li>
+	</ul>
+
+
+  <div class="container" ng-controller="MainController">
+		<div class="row">
+			<div class="col-md-8 offset-md-2">
+				<h1 id="page-title">Block Explorer</h1>
+			</div>
+		</div>
+	</div>
+
+
+
+
+	<div class="start" id = "start">
+	<a href="http://localhost:3001/startnode" target="_blank"><button class="btn btn-primary margin-auto btn-search">Start node</button></a>
+	</div>
+	<br>
+
+<div class="start-all" id = "start-all">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter number of nodes to run </p> <input type="text" id="start2" name="nodes">
+  <a href= "http://localhost:3001/blockchain" target="_blank"><button onclick="startallnodes()" class="btn btn-primary margin-auto btn-search">Start all nodes</button></a>
+	<a href= "http://localhost:3001/blockchain" target="_blank"><button onclick="nodebroadcast()" class="btn btn-primary margin-auto btn-search">nodes broadcast</button></a>
+
+  <script>
+    function startallnodes() {
+
+      var w= document.getElementById('start2').value;
+			var url = "http://localhost:300";
+
+			console.log(w);
+      var formData = {
+     "nodes": w
+      };
+      $.ajax({
+           url: "http://localhost:3000/startnode",
+           type: 'POST',
+           dataType: 'json',
+           data: formData
+        }).done(function(data) {
+           // Call your open_popup() function here
+					 //nodebroadcast();
+					 // console.log("function");
+         });
+}
+		function nodebroadcast() {
+      var w= document.getElementById('start2').value;
+      for(i=0;i<w;i++){
+			 var formData2 = {
+ 	     "index":i+1
+ 	      };
+				//console.log(url+i);
+				 $.ajax({
+ 	           url: "http://localhost:3001/register-and-broadcast-node",
+ 	           type: 'POST',
+ 	           dataType: 'json',
+ 	           data: formData2
+ 	        }).done(function(data) {
+ 	           // Call your open_popup() function here
+ 	         });
+     }
+    }
+  </script>
+
+</div>
+<br>
+
+	<div class="hit" id ="hit">
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter node server/name: </p><input type="text" id="id" name="node">
+			<select id="options" class="dd">
+       <option value="blockchain">View Block</option>
+       <option value="mine">Mine New Block</option>
+       <option value="transaction">Transactions</option>
+			 <option value="sector_allocation">Allocate-sectors</option>
+     </select><br>
+      &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button onclick="myFunction()" class="btn btn-primary margin-auto btn-search">DO IT</button>
+			<br>
+
+<script>
+	function myFunction() {
+  var x = document.getElementById("id").value;
+	var y = document.getElementById("options").value;
+	var z = "http://localhost:"+x+"/"+y;
+  window.open(z, "_blank");
+}
+</script>
+</div><br>
+
+<div class="transaction" id= "transation">
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter node server/name: </p><input type="text" id="server" name="node">
+	&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter transaction id </p><input type="text" id="transid" name="reciever">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter amount of transations: </p><input type="text" id="amount" name="amount">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter sender address: </p><input type="text" id="sender" name="sender">
+  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<p class="text">Enter reciever address: </p><input type="text" id="recipient" name="reciever">
+
+
+  <button onclick="posttransactions()" class="btn btn-primary margin-auto btn-search">SUBMIT</button><br>
+
+  <script>
+  	function posttransactions() {
+		var a = document.getElementById("transid").value;
+		var b = document.getElementById("server").value;
+    var w= document.getElementById('amount').value;
+    var x = document.getElementById('sender').value;
+  	var y = document.getElementById("recipient").value;
+  	var z = "http://localhost:"+b+"/"+"transaction/broadcast";
+
+    var formData = {
+	 'transactionid':a,
+   'amount':w,
+   'sender':x,
+   'recipient':y
+};
+    // window.open(z, "_blank");
+    $.ajax({
+         url: z,
+         type: 'POST',
+         dataType: 'json',
+         data: formData
+      }).done(function(data) {
+         // Call your open_popup() function here
+       });
+
+  }
+  </script>
+</div>
+
+
+<style type="text/css">
+  html, body {
+    min-height: 100vh;
+    background-color:#D8BFD8;
+  }
+  .container {
+    padding-top: 50px;
+    padding-bottom: 50px;
+  }
+  #page-title {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .table-title {
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .hit {
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .start {
+    text-align: center;
+  }
+  .start-all{
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+  }
+  .transaction{
+    text-align: center;
+    padding-top: 20px;
+    padding-bottom: 20px;
+
+  }
+  .table {
+    background-color: #ffffff;
+    box-shadow: 2px 2px 15px -3px rgba(0,0,0,0.75);
+  }
+  #balance-text {
+    text-align: center;
+    margin-top: -20px;
+    margin-bottom: 30px;
+  }
+  .margin-auto {
+    margin: auto;
+    display: block;
+  }
+  .btn-search {
+    margin-bottom: 20px;
+  }
+  .bold {
+    font-weight: 700;
+  }
+  .no-data-text {
+    color: red;
+    text-align: center;
+  }
+  .text {
+    color: black;
+    font-weight: 700;
+  }
+  .dd {
+    color: black;
+    font-weight: 300;
+    box-shadow: 2px 2px 15px -3px rgba(0,0,0,0.75);
+    padding-top: 3px;
+    padding-bottom: 3px;
+  }
+
+</style>
+
+</body>
+
+</html>
