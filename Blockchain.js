@@ -1,6 +1,14 @@
 const sha256 = require('sha256');
 const currentNodeUrl = process.argv[3];
 const uuid = require('uuid/v1');
+var express = require('express');
+var hbs = require('hbs');
+
+var app = express();
+app.set('view engine', 'hbs');
+app.use(express.static(__dirname + '/public'));
+
+
 
 function Blockchain() {
 	this.chain = [];
@@ -324,6 +332,7 @@ Blockchain.prototype.alocate_nsector= function(arr,nNode){
   return arr;
 };
 
+var mining_sector[]=0; ////////////////////////////////////
 
 Blockchain.prototype.sector_allocation= function(port)
 {
@@ -386,5 +395,15 @@ Blockchain.prototype.sector_allocation= function(port)
   console.log("verification sectors are = " + verification_sector);
 	return [sectors, verification_sector , mining_sector];
 }
+
+app.get('/print', (req,res) => {
+	res.render('about.hbs', {
+		mining: mining_sector;
+	});
+})
+
+app.listen(8080, function() {
+	console.log(`Listening on port 8080...`);
+});
 
 module.exports = Blockchain;
