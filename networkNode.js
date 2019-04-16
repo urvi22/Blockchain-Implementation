@@ -31,10 +31,7 @@ app.get('*', function(req, res) {
     var name = 'hello';
     res.render('index2.html' , {name:name})
 });
-app.get('/check', function (req , res) {
-    res.send(`note: New block mined ${port}  & broadcast successfully`)
 
-})
 // app.post('/startnode',function (req , res) {
 //   console.log(" starting nodes ");
 //   nodestostart=req.body.nodes;
@@ -72,15 +69,22 @@ app.post('/transaction', function(req, res) {
 	const blockIndex = bitcoin.addTransactionToPendingTransactions(newTransaction);
 	res.json({ note: `Transaction will be added in block ${blockIndex}.` });
 });
-var c1=0;
-var c2=0;
-var c3=0;
+
+
+var c = bitcoin.Create2DArray(100, 3);
+
+
 var verified_sectors_count=0;//verication count-------------------
 // mine a block
 app.get('/mine', function(req, res) {
 //netwroknodes/2 ki ceil
-var len=Math.ceil(bitcoin.networkNodes.length/2);
-  if(c1>=len && c2>=len && c3>=len) //changeeeeeeeee whennnchangee number of nodes..............
+//var len=Math.ceil(bitcoin.networkNodes.length/2);
+id=1;
+  bitcoin.pendingTransactions.transactionId.forEach(i => {
+    console.log(i);
+  })
+
+  if(c[id][0]>=Math.ceil(ver1.length/2) && c[id][1]>=Math.ceil(ver2.length/2) && c[id][1]>=Math.ceil(ver3.length/2)) //changeeeeeeeee whennnchangee number of nodes..............
     {
       verified_sectors_count=1;
       console.log("verified_sectors_count=="+verified_sectors_count);
@@ -96,6 +100,8 @@ var len=Math.ceil(bitcoin.networkNodes.length/2);
 	};
 	const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData);
 	const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+
+
   if(verified_sectors_count==1){
 	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
 
@@ -316,9 +322,6 @@ app.get('/block-explorer', function(req, res) {
 });
 
 
-
-
-
 veri =""
 mini=""
 mine_urls=[]
@@ -328,9 +331,11 @@ mining_sector=[]
 transaction_count=0
 transaction_limit=5
 start=1;
-sectors=[];
+sectors=[]
+flag=0;
 app.post('/transaction/broadcast', function(req, res) {
-
+  veri =""
+  mini=""
   transaction_count+=1
   if(transaction_count%(transaction_limit+1)==1)
   {
@@ -338,6 +343,7 @@ app.post('/transaction/broadcast', function(req, res) {
     sectors=ret[0];
     verification_sector=ret[1];
     mining_sector=ret[2];
+    flag=1;
   }
 
 	const newTransaction = bitcoin.createNewTransaction(req.body.transactionid,req.body.amount, req.body.sender, req.body.recipient);
@@ -392,7 +398,9 @@ app.post('/transaction/broadcast', function(req, res) {
 		//res.json({ note: 'Transaction created and broadcast successfully.' });
 	});
   print_json="Transaction and sector created and broadcast successfully";
-  request('http://localhost:3002/sector/broadcast', { json: true }, (err, res, body) => {
+  if (flag==1)
+  {str_address="http://localhost:"+port+"/sector/broadcast"
+  request(str_address, { json: true }, (err, res, body) => {
     if (err) { return console.log(err); }
     // console.log(res);
   // send(res.body);
@@ -400,7 +408,10 @@ app.post('/transaction/broadcast', function(req, res) {
   //
 
 });
+flag=0;
+}
 res.json(print_json);
+
 });
 
 app.post('/sector', function(req, res) {
@@ -441,10 +452,11 @@ app.get('/sector/broadcast', function(req, res) {
 app.post('/verification-broadcast', function(req, res) {
   var pi=port%100;
   var a=Math.floor((req.body.transactionid)/5);
-  console.log("a............."+a);
+  //console.log("a............."+a);
   const	p = {
   		port: pi,
-      sector_id:a
+      sector_id:a,
+      transactionId:req.body.transactionid
   	};
 
   const requestPromises = [];
@@ -488,6 +500,8 @@ app.post('/verification-broadcast', function(req, res) {
 app.post('/verify', function(req, res) {
   const p = req.body.port;
   const a = req.body.sector_id;
+  const id=req.body.transactionId;
+  //console.log("id---"+id)
   var min=bitcoin.sector_list[a].veri;
   ver_urls=[];
   ver1=[];
@@ -511,40 +525,44 @@ app.post('/verify', function(req, res) {
     }
   }
   //console.log(ver_urls);
-  for (var i=0;i<len;i++)
-  {  ver1.push(ver_urls[i]);
-    if(i==len)
-    break;
+  for (var i=0;i<ver_urls.length;)
+  {
+      ver1.push(ver_urls[i++]);
+      ver1.push(ver_urls[i++]);
+      if(i==len)
+      break;
+      ver2.push(ver_urls[i++]);
       ver2.push(ver_urls[i++]);
       if(i==len)
       break;
       ver3.push(ver_urls[i++]);
+      ver3.push(ver_urls[i++]);
       if(i==len)
-      break;}
-  //
-  // ver1.push(ver_urls[0]);
-  // ver1.push(ver_urls[1]);
-  // ver2.push(ver_urls[2]);
-  // ver2.push(ver_urls[3]);
-  // ver3.push(ver_urls[4]);
-  // ver3.push(ver_urls[5]);
+      break;
 
-  //console.log("port "+p);
 
-  if(bitcoin.in_array(ver1,p))
+
+
+    }
+
+      console.log("p--"+p)
+      console.log("ver1--"+ver1);
+      console.log("ver2--"+ver2);
+      console.log("ver3-"+ver3);
+  if(bitcoin.in_array(ver1,p) )
   {
-      c1+=1;
-      console.log("number of nodes verified in 1st sector="+c1);
+      c[id][0]+=1;
+      console.log("number of nodes verified in 1st sector for id"+id+" are=="+c[id][0]);
   }
-  else if(bitcoin.in_array(ver2,p))
+  else if(bitcoin.in_array(ver2,p) )
   {
-    c2+=1;
-    console.log("number of nodes verified in 2nd sector="+c2);
+    c[id][1]+=1;
+    console.log("number of nodes verified in 2nd sector for id"+id+" are=="+c[id][1]);
   }
-  else if(bitcoin.in_array(ver3,p))
+  else if(bitcoin.in_array(ver3,p) )
   {
-    c3+=1;
-    console.log("number of nodes verified in 3rd sector="+c3);
+    c[id][2]+=1;
+    console.log("number of nodes verified in 3rd sector for id"+id+" are=="+c[id][2]);
   }
 
 res.json({ note: 'verification notification received' });
