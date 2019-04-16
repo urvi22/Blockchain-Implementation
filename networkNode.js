@@ -36,6 +36,10 @@ app.get('/blockchain', function (req, res) {
 app.get('/', function(req, res) {
     res.sendFile(path.join(__dirname, 'index2.html'));
 });
+app.get('/check', function (req , res) {
+    res.send(`note: New block mined ${port}  & broadcast successfully`)
+  
+})
 // app.post('/startnode',function (req , res) {
 //   console.log(" starting nodes ");
 //   nodestostart=req.body.nodes;

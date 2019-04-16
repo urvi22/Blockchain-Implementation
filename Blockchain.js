@@ -349,6 +349,7 @@ Blockchain.prototype.sector_allocation= function(port)
   var currentNodeId=port%100;
 	console.log("port is "+ currentNodeId);                 // place Your current node id here
   var currentNodeSector=0;
+	flag3=1;
   for (i=0;i<sectors.length;i++)
   {
       for (j=0;j<sectors[i].length;j++)
@@ -356,9 +357,12 @@ Blockchain.prototype.sector_allocation= function(port)
         if(sectors[i][j]==currentNodeId)
         {
           currentNodeSector=i
-          break;
+					flag3=0;
+					break;
         }
       }
+			if(flag3==0)
+			break;
   }
   console.log("current node sector==" + currentNodeSector);
 
