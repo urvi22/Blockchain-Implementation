@@ -25,6 +25,7 @@
     "body-parser": "^1.18.2",
     "concurrently": "^4.1.0",
     "edit-json-file": "^1.2.1",
+    "ejs": "^2.6.1",
     "express": "^4.16.3",
     "hbs": "^4.0.3",
     "nodemon": "^1.17.3",

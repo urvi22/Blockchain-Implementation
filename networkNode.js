@@ -4,25 +4,18 @@ const bodyParser = require('body-parser');
 const Blockchain = require('./Blockchain');
 const uuid = require('uuid/v1');
 const port = process.argv[2];
-// let port = process.env.PORT;
-// if (port == null || port == "") {
-//   port = 5000;
-// }
-
 const rp = require('request-promise');
 const nodeAddress = uuid().split('-').join('');
-const editJsonFile = require("edit-json-file");
-const bitcoin = new Blockchain();
-var shell = require('shelljs');
-// shell.echo('hello world');
 const path = require('path');
 const request = require('request');
 
+const bitcoin = new Blockchain();
 
-console.log("port is " + port);
-
-// let file = editJsonFile(`/home/sanchi/Desktop/minor2/package.json`);
-// console.log(file.get());
+app.use(express.static(__dirname + '/public'));
+app.set('views', __dirname + '/public/views');
+app.engine('html', require('ejs').renderFile);
+app.set('view engine', 'html');
+// console.log("port is " + port);
 
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -33,12 +26,14 @@ app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
-app.get('/', function(req, res) {
-    res.sendFile(path.join(__dirname, 'index2.html'));
+app.get('*', function(req, res) {
+
+    var name = 'hello';
+    res.render('index2.html' , {name:name})
 });
 app.get('/check', function (req , res) {
     res.send(`note: New block mined ${port}  & broadcast successfully`)
-  
+
 })
 // app.post('/startnode',function (req , res) {
 //   console.log(" starting nodes ");
