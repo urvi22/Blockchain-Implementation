@@ -410,7 +410,9 @@ app.post('/transaction/broadcast', function(req, res) {
 });
 flag=0;
 }
-res.json(print_json);
+// res.json(print_json);
+var name = "hello";
+res.render('index2.html' , {name:name , sectors:sectors , mining_sector:mining_sector})
 
 });
 
