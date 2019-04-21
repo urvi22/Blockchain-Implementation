@@ -320,3 +320,10 @@ hr
 	opacity: 0.8;
 	visibility: visible;
 }
+
+.container {
+  position: relative;
+  text-align: center;
+  color: white;
+	font-size: 20;
+}
