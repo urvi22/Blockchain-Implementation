@@ -79,7 +79,7 @@ var verified_sectors_count=0;//verication count-------------------
 app.get('/mine', function(req, res) {
 //netwroknodes/2 ki ceil
 //var len=Math.ceil(bitcoin.networkNodes.length/2);
-id=1;
+  id=1;
   bitcoin.pendingTransactions.transactionId.forEach(i => {
     console.log(i);
   })
@@ -88,47 +88,45 @@ id=1;
     {
       verified_sectors_count=1;
       console.log("verified_sectors_count=="+verified_sectors_count);
-
     }
 
 	const lastBlock = bitcoin.getLastBlock();
 	const previousBlockHash = lastBlock['hash'];
-
 	const currentBlockData = {
 		transactions: bitcoin.pendingTransactions,
 		index: lastBlock['index'] + 1
 	};
+
 	const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData);
 	const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
 
-
   if(verified_sectors_count==1){
-	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
+  	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
 
-	const requestPromises = [];
-	bitcoin.networkNodes.forEach(networkNodeUrl => {
-		const requestOptions = {
-			uri: networkNodeUrl + '/receive-new-block',
-			method: 'POST',
-			body: { newBlock: newBlock },
-			json: true
-		};
+  	const requestPromises = [];
+  	bitcoin.networkNodes.forEach(networkNodeUrl => {
+  		const requestOptions = {
+  			uri: networkNodeUrl + '/receive-new-block',
+  			method: 'POST',
+  			body: { newBlock: newBlock },
+  			json: true
+  		};
 
-		requestPromises.push(rp(requestOptions));
-	});
+  		requestPromises.push(rp(requestOptions));
+  	});
 
-	Promise.all(requestPromises)
+  	Promise.all(requestPromises)
 
-	.then(data => {
-		res.json({
-			note: "New block mined & broadcast successfully",
-			block: newBlock
-		});
-	});
-}
-else{
-  res.json({ note: 'not enough verification' });
-}
+  	.then(data => {
+  		res.json({
+  			note: "New block mined & broadcast successfully",
+  			block: newBlock
+  		});
+  	});
+  }
+  else{
+    res.json({ note: 'not enough verification' });
+  }
 });
 
 // receive new block
@@ -333,10 +331,12 @@ transaction_limit=5
 start=1;
 sectors=[]
 flag=0;
+
 app.post('/transaction/broadcast', function(req, res) {
   veri =""
   mini=""
   transaction_count+=1
+
   if(transaction_count%(transaction_limit+1)==1)
   {
     ret=bitcoin.sector_allocation(port)
@@ -363,18 +363,21 @@ app.post('/transaction/broadcast', function(req, res) {
   console.log("veri."+veri);
 
   for (i=0;i<sectors[mining_sector].length;++i)
-  {urlss.push(sectors[mining_sector][i]);
-  mini=mini+" "+(sectors[mining_sector][i]+1);}
+  {
+    urlss.push(sectors[mining_sector][i]);
+    mini=mini+" "+(sectors[mining_sector][i]+1);
+  }
+
   console.log("mini"+mini);
 
   //urls for verification and mining
   urlss.sort();
   for(var i =0;i<urlss.length;i++)
-  {urlss[i]+=1;
+  {
+    urlss[i]+=1;
   }
 
   console.log("urlss="+urlss);
-
   console.log("all urls="+bitcoin.networkNodes);
 
 	bitcoin.networkNodes.forEach(networkNodeUrl => {
@@ -387,32 +390,32 @@ app.post('/transaction/broadcast', function(req, res) {
 			body: newTransaction,
 			json: true
 		};
-
 		requestPromises.push(rp(requestOptions));
 	}
-
 });
 
 	Promise.all(requestPromises)
 	.then(data => {
 		//res.json({ note: 'Transaction created and broadcast successfully.' });
 	});
-  print_json="Transaction and sector created and broadcast successfully";
-  if (flag==1)
-  {str_address="http://localhost:"+port+"/sector/broadcast"
-  request(str_address, { json: true }, (err, res, body) => {
-    if (err) { return console.log(err); }
-    // console.log(res);
-  // send(res.body);
-  //print_json=res.body;
-  //
 
-});
-flag=0;
-}
-// res.json(print_json);
-var name = "hello";
-res.render('index2.html' , {name:name , sectors:sectors , mining_sector:mining_sector})
+  print_json="Transaction and sector created and broadcast successfully";
+
+  // if (flag==1)
+  // {
+  //   str_address="http://localhost:"+port+"/sector/broadcast"
+  //   request(str_address, { json: true }, (err, res, body) => {
+  //   if (err) { return console.log(err); }
+  //   // console.log(res);
+  // // send(res.body);
+  // //print_json=res.body;
+  // //
+  //   });
+  //   flag=0;
+  // }
+res.json(print_json);
+
+  // res.render('index2.html' , {name:"harshit" , sectors:sectors , mining_sector:mining_sector})
 
 });
 
@@ -424,7 +427,7 @@ app.post('/sector', function(req, res) {
 
 
 app.get('/sector/broadcast', function(req, res) {
-
+console.log("i am in sector broadcast");
   indices=port+"="+start+"-"+(start+transaction_limit-1);
 	const newsector = bitcoin.createNewSector(indices, veri, mini);
 	bitcoin.addSectorsToSectors_list(newsector);
