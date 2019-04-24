@@ -26,7 +26,7 @@ app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
-app.get('*', function(req, res) {
+app.get('/start', function(req, res) {
 
     var name = 'hello';
     res.render('index2.html' , {name:name})
@@ -79,9 +79,16 @@ var verified_sectors_count=0;//verication count-------------------
 app.get('/mine', function(req, res) {
 //netwroknodes/2 ki ceil
 //var len=Math.ceil(bitcoin.networkNodes.length/2);
-  id=1;
+id=1;
   bitcoin.pendingTransactions.transactionId.forEach(i => {
     console.log(i);
+    if (c[id][3]==1)
+    verified_sectors_count=1;
+    else {
+      verified_sectors_count=0;
+      // if (verified_sectors_count==0) return false
+      // else return true
+      }
   })
 
   if(c[id][0]>=Math.ceil(ver1.length/2) && c[id][1]>=Math.ceil(ver2.length/2) && c[id][1]>=Math.ceil(ver3.length/2)) //changeeeeeeeee whennnchangee number of nodes..............
@@ -400,22 +407,24 @@ app.post('/transaction/broadcast', function(req, res) {
 	});
 
   print_json="Transaction and sector created and broadcast successfully";
+  console.log(port+"---------port");
+  if (flag==1)
+  {
+    str_address="http://localhost:"+port+"/sector/broadcast";
+    request(str_address, { json: false }, (err, res, req) => {
+    if (err)
+      { return console.log(err);
 
-  // if (flag==1)
-  // {
-  //   str_address="http://localhost:"+port+"/sector/broadcast"
-  //   request(str_address, { json: true }, (err, res, body) => {
-  //   if (err) { return console.log(err); }
-  //   // console.log(res);
-  // // send(res.body);
-  // //print_json=res.body;
-  // //
-  //   });
-  //   flag=0;
-  // }
+      }
+     else {
+       console.log("sector broadcast called");
+      }
+  });
+  flag=0;
+  }
 res.json(print_json);
-
-  // res.render('index2.html' , {name:"harshit" , sectors:sectors , mining_sector:mining_sector})
+var name = "hello";
+//res.render('index2.html' , {name:name , sectors:sectors , mining_sector:mining_sector})
 
 });
 
@@ -427,7 +436,6 @@ app.post('/sector', function(req, res) {
 
 
 app.get('/sector/broadcast', function(req, res) {
-console.log("i am in sector broadcast");
   indices=port+"="+start+"-"+(start+transaction_limit-1);
 	const newsector = bitcoin.createNewSector(indices, veri, mini);
 	bitcoin.addSectorsToSectors_list(newsector);
@@ -461,7 +469,7 @@ app.post('/verification-broadcast', function(req, res) {
   const	p = {
   		port: pi,
       sector_id:a,
-      transactionId:req.body.transactionid
+      transactionid:req.body.transactionid
   	};
 
   const requestPromises = [];
@@ -505,13 +513,13 @@ app.post('/verification-broadcast', function(req, res) {
 app.post('/verify', function(req, res) {
   const p = req.body.port;
   const a = req.body.sector_id;
-  const id=req.body.transactionId;
+  const id=req.body.transactionid;
   //console.log("id---"+id)
   var min=bitcoin.sector_list[a].veri;
   ver_urls=[];
-  ver1=[];
-  ver2=[];
-  ver3=[];
+  // ver1=[];
+  // ver2=[];
+  // ver3=[];
   var len=bitcoin.networkNodes.length;
 
   var word="";
@@ -530,45 +538,86 @@ app.post('/verify', function(req, res) {
     }
   }
   //console.log(ver_urls);
-  for (var i=0;i<ver_urls.length;)
-  {
-      ver1.push(ver_urls[i++]);
-      ver1.push(ver_urls[i++]);
-      if(i==len)
-      break;
-      ver2.push(ver_urls[i++]);
-      ver2.push(ver_urls[i++]);
-      if(i==len)
-      break;
-      ver3.push(ver_urls[i++]);
-      ver3.push(ver_urls[i++]);
-      if(i==len)
-      break;
-
-
-
-
+  // for (var i=0;i<ver_urls.length;)
+  // {
+  //     ver1.push(ver_urls[i++]);
+  //     if(i==len)
+  //     break;
+  //     ver2.push(ver_urls[i++]);
+  //     if(i==len)
+  //     break;
+  //     ver3.push(ver_urls[i++]);
+  //     if(i==len)
+  //     break;
+  //   }
+    var nSectors= 6/2;
+    var nNodes= Math.floor(ver_urls.length / nSectors);
+    console.log("nSectors-"+nSectors);
+    console.log("nNodes-"+nNodes);
+    var ver_nodes_array = bitcoin.Create2DArray(nSectors, nNodes);
+    //console.log(arr);
+    var ind=0;
+    for(var b=0;b<nSectors;b++){
+      for(var i=0; i<nNodes; i++){
+        ver_nodes_array[b][i]=ver_urls[ind];
+        ind=ind+1;
+      }
     }
 
       console.log("p--"+p)
-      console.log("ver1--"+ver1);
-      console.log("ver2--"+ver2);
-      console.log("ver3-"+ver3);
-  if(bitcoin.in_array(ver1,p) )
+      for(var k=0;k<nSectors;k++)
+      {console.log("ver"+(k+1)+"--"+ver_nodes_array[k]);}
+      // console.log("ver2--"+ver_nodes_array[1]);
+      // console.log("ver3-"+ver_nodes_array[2]);
+  var i=0;
+
+  //console.log(c.length);
+
+  for(i=0;i< nSectors;i++)
   {
-      c[id][0]+=1;
-      console.log("number of nodes verified in 1st sector for id"+id+" are=="+c[id][0]);
+    if(bitcoin.in_array(ver_nodes_array[i],p) )
+    {
+        c[id][i]+=1;
+        console.log("number of nodes verified in sector "+ (i+1) +" for id "+id+" are=="+c[id][i]);
+    }
   }
-  else if(bitcoin.in_array(ver2,p) )
+  // if(bitcoin.in_array(ver_nodes_array[0],p) )
+  // {
+  //     c[id][0]+=1;
+  //     console.log("number of nodes verified in 1st sector for id"+id+" are=="+c[id][0]);
+  // }
+  // else if(bitcoin.in_array(ver_nodes_array[1],p) )
+  // {
+  //   c[id][1]+=1;
+  //   console.log("number of nodes verified in 2nd sector for id"+id+" are=="+c[id][1]);
+  // }
+  // else if(bitcoin.in_array(ver_nodes_array[2],p) )
+  // {
+  //   c[id][2]+=1;
+  //   console.log("number of nodes verified in 3rd sector for id"+id+" are=="+c[id][2]);
+  // }
+  var f1=0
+  for(var j=0;j< nSectors;j++)
   {
-    c[id][1]+=1;
-    console.log("number of nodes verified in 2nd sector for id"+id+" are=="+c[id][1]);
+    if(c[id][j]>=Math.ceil(ver_nodes_array[j].length/2) ) //changeeeeeeeee whennnchangee number of nodes..............
+      {
+        f1=1;
+
+      }
+      else {
+        f1=0;
+      }
   }
-  else if(bitcoin.in_array(ver3,p) )
-  {
-    c[id][2]+=1;
-    console.log("number of nodes verified in 3rd sector for id"+id+" are=="+c[id][2]);
-  }
+  if (f1==1)
+  {c[id][i]=1;
+  console.log("verification for id "+id+" = "+c[id][i]);
+   }
+  // if(c[id][0]>=Math.ceil(ver_nodes_array[0].length/2) && c[id][1]>=Math.ceil(ver_nodes_array[1].length/2) && c[id][2]>=Math.ceil(ver_nodes_array[2].length/2)) //changeeeeeeeee whennnchangee number of nodes..............
+  //   {
+  //     c[id][3]=1;
+  //     console.log("verification for id "+id+" = "+c[id][3]);
+  //
+  //   }
 
 res.json({ note: 'verification notification received' });
 });

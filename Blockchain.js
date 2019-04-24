@@ -244,7 +244,7 @@ Blockchain.prototype.Create2DArray = function(r,c){
 			arr[i] = new Array();
 			for(j=0; j<c; j++)
 			{
-					arr[i][j];
+					arr[i][j]=0;
 			}
 	}
 		return arr;
@@ -346,7 +346,7 @@ Blockchain.prototype.sector_allocation= function(port)
   // res.json({ note: `Blocks are alloted` });
   console.log("sector are= " + sectors);
   console.log("no of sectors = " + sectors.length);
-  var currentNodeId=port%100;
+  var currentNodeId=(port-1)%100;
 	console.log("port is "+ currentNodeId);                 // place Your current node id here
   var currentNodeSector=0;
 	flag3=1;
@@ -384,6 +384,9 @@ Blockchain.prototype.sector_allocation= function(port)
           verification_sector[count]=a[i];
           count++;
       }
+			else {
+				console.log("it is current sector");
+			}
 
   }
 
