@@ -70,43 +70,149 @@ app.post('/transaction', function(req, res) {
 	res.json({ note: `Transaction will be added in block ${blockIndex}.` });
 });
 
+// mine initiation
+var x=0;
+var y=1000;
+app.get('/mining-initiation-bulk', function(req, res) {
 
-var c = bitcoin.Create2DArray(100, 3);
+console.log("on mining-initiation-bulk");
+
+    const requestPromises = [];
+    bitcoin.networkNodes.forEach(networkNodeUrl => {
+    var ab=networkNodeUrl[19]+networkNodeUrl[20];
+    console.log("mine_urls -" +mine_urls);
+    if (bitcoin.in_array(mine_urls,ab))
+    {
+      const	p = {
+          start:x,
+          end:(x+y)
+        };
+        x=x+y;
+  		const requestOptions = {
+  			uri: networkNodeUrl + '/mine',
+        method: 'POST',
+  			body: p,
+  			json: true
+  		  };
+  		requestPromises.push(rp(requestOptions));
+    }
+
+});
+
+	Promise.all(requestPromises)
+	.then(data => {
+		res.json({ note: 'sent notification to mine.' });
+	});
+});
+
+app.post('/mining-initiation', function(req, res) {
+
+  if(req.body.port!=-1)
+  {
+    const requestPromises = [];
+      const	p = {
+          start:x,
+          end:(x+y),
+          port:port
+        };
+        x=x+y;
+      const requestOptions = {
+        uri: "http://localhost:"+req.body.port+"/mine",
+        method: 'POST',
+        body: p,
+        json: true
+        };
+      requestPromises.push(rp(requestOptions));
+
+      Promise.all(requestPromises)
+      .then(data => {
+        res.json({ note: 'sent notification to mine.' });
+      });
+  }
+  else {
+    res.json({ note: 'stop mining' });
+  }
+
+});
+
+
+var c = bitcoin.Create2DArray(100, 4);
 
 
 var verified_sectors_count=0;//verication count-------------------
 // mine a block
-app.get('/mine', function(req, res) {
-//netwroknodes/2 ki ceil
-//var len=Math.ceil(bitcoin.networkNodes.length/2);
-id=1;
-  bitcoin.pendingTransactions.transactionId.forEach(i => {
-    console.log(i);
+app.post('/mine', function(req, res) {
+  console.log("on mine");
+  const start= req.body.start;
+  const end= req.body.end;
+  console.log("range is "+start+" - "+end);
+
+var start_mine=1;
+if(start_mine)
+{
+  const lastBlock = bitcoin.getLastBlock();
+  const previousBlockHash = lastBlock['hash'];
+  const currentBlockData = {
+    transactions: bitcoin.pendingTransactions,
+    index: lastBlock['index'] + 1
+  };
+
+  const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData,start,end);
+  // var got_nonce=0;
+  if(nonce==-1)
+  {
+    //////go on;
+    str_address="http://localhost:"+req.body.port+"/mining-initiation";
+    request(str_address, { json: {port:port} }, (err, res, req) => {
+    if (err)
+      { return console.log(err);
+
+      }
+     else {
+       console.log("checked nonce from-"+start+" - "+end);
+      }
+
+  });
+
+  ////////////////////PUT AN EXIT STATEMENT HERE
+}
+  else {
+    //send notofication to stop;
+    // got_nonce=1;
+    str_address="http://localhost:"+req.body.port+"/mining-initiation";
+    request(str_address, { json: {port:"-1"} }, (err, res, req) => {
+    if (err)
+      { return console.log(err);
+
+      }
+     else {
+       console.log(" nonce calculated ");
+      }
+
+  });
+
+  }
+  const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+}
+
+var id=1;
+  bitcoin.pendingTransactions.forEach(p => {
+    console.log(p);
+    id=p.transactionId;
     if (c[id][3]==1)
     verified_sectors_count=1;
     else {
       verified_sectors_count=0;
-      // if (verified_sectors_count==0) return false
-      // else return true
+      if (verified_sectors_count==0) return false
+      else return true
       }
   })
 
-  if(c[id][0]>=Math.ceil(ver1.length/2) && c[id][1]>=Math.ceil(ver2.length/2) && c[id][1]>=Math.ceil(ver3.length/2)) //changeeeeeeeee whennnchangee number of nodes..............
-    {
-      verified_sectors_count=1;
-      console.log("verified_sectors_count=="+verified_sectors_count);
-    }
-
-	const lastBlock = bitcoin.getLastBlock();
-	const previousBlockHash = lastBlock['hash'];
-	const currentBlockData = {
-		transactions: bitcoin.pendingTransactions,
-		index: lastBlock['index'] + 1
-	};
-
-	const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData);
-	const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
-
+  // if(c[id][0]>=Math.ceil(ver1.length/2) && c[id][1]>=Math.ceil(ver2.length/2) && c[id][1]>=Math.ceil(ver3.length/2)) //changeeeeeeeee whennnchangee number of nodes..............
+  //   {
+  //     verified_sectors_count=1;
+  //     console.log("verified_sectors_count=="+verified_sectors_count);
+  //   }
   if(verified_sectors_count==1){
   	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
 
@@ -472,8 +578,8 @@ app.post('/verification-broadcast', function(req, res) {
       transactionid:req.body.transactionid
   	};
 
-  const requestPromises = [];
-  var min=bitcoin.sector_list[a].minee;///////////
+
+  var min=bitcoin.sector_list[a].minee;//////////
   var word="";
   min=min+" ";
   for(i=1;i<min.length;i++)
@@ -488,6 +594,7 @@ app.post('/verification-broadcast', function(req, res) {
     }
   }
   //console.log(mine_urls);
+    const requestPromises = [];
   bitcoin.networkNodes.forEach(networkNodeUrl => {
     var ab=networkNodeUrl[19]+networkNodeUrl[20];
     if (bitcoin.in_array(mine_urls,ab))

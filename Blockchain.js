@@ -147,18 +147,27 @@ Blockchain.prototype.hashBlock = function(previousBlockHash, currentBlockData, n
 };
 
 
-Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData) {
-	let nonce = 0;
+Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData,start,end) {
+	let nonce = start;
+	var f=0;
 	let hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
 	while (hash.substring(0, 4) !== '0000') {
+		if(nonce==end)
+		{f=1;
+			break;
+		}
 		nonce++;
 		hash = this.hashBlock(previousBlockHash, currentBlockData, nonce);
+
 	}
-
-	return nonce;
+	if (f==0)
+	{	console.log("nonce--"+nonce);
+		return nonce;}
+	else
+	{
+console.log("nonce--  -1");
+		return -1;}
 };
-
-
 
 Blockchain.prototype.chainIsValid = function(blockchain) {
 	let validChain = true;
