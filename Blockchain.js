@@ -161,11 +161,11 @@ Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData,
 
 	}
 	if (f==0)
-	{	console.log("nonce--"+nonce);
+	{	console.log(" correct nonce  found "+nonce);
 		return nonce;}
 	else
 	{
-console.log("nonce--  -1");
+console.log("nonce is  -1 blockchain");
 		return -1;}
 };
 

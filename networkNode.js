@@ -72,7 +72,7 @@ app.post('/transaction', function(req, res) {
 
 // mine initiation
 var x=0;
-var y=1000;
+var y=10000;
 app.get('/mining-initiation-bulk', function(req, res) {
 
 console.log("on mining-initiation-bulk");
@@ -80,12 +80,13 @@ console.log("on mining-initiation-bulk");
     const requestPromises = [];
     bitcoin.networkNodes.forEach(networkNodeUrl => {
     var ab=networkNodeUrl[19]+networkNodeUrl[20];
-    console.log("mine_urls -" +mine_urls);
+
     if (bitcoin.in_array(mine_urls,ab))
-    {
+    {console.log("mine_urls -" +mine_urls);
       const	p = {
           start:x,
-          end:(x+y)
+          end:(x+y),
+          port:port
         };
         x=x+y;
   		const requestOptions = {
@@ -106,7 +107,8 @@ console.log("on mining-initiation-bulk");
 });
 
 app.post('/mining-initiation', function(req, res) {
-
+console.log("mining_initialization");
+// console.log(req.body);
   if(req.body.port!=-1)
   {
     const requestPromises = [];
@@ -148,53 +150,124 @@ app.post('/mine', function(req, res) {
   console.log("range is "+start+" - "+end);
 
 var start_mine=1;
+var nonce=0;
+var lastBlock = bitcoin.getLastBlock();
+var previousBlockHash = lastBlock['hash'];
+var currentBlockData = {
+  transactions: bitcoin.pendingTransactions,
+  index: lastBlock['index'] + 1
+};
+var blockHash=0;
+
 if(start_mine)
 {
-  const lastBlock = bitcoin.getLastBlock();
-  const previousBlockHash = lastBlock['hash'];
-  const currentBlockData = {
-    transactions: bitcoin.pendingTransactions,
-    index: lastBlock['index'] + 1
-  };
 
-  const nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData,start,end);
+  nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData,start,end);
   // var got_nonce=0;
   if(nonce==-1)
-  {
+  { console.log("nonce -1 mine ");
     //////go on;
-    str_address="http://localhost:"+req.body.port+"/mining-initiation";
-    request(str_address, { json: {port:port} }, (err, res, req) => {
-    if (err)
-      { return console.log(err);
 
-      }
-     else {
-       console.log("checked nonce from-"+start+" - "+end);
-      }
+    var headers = {
+    'User-Agent':       'Super Agent/0.0.1',
+    'Content-Type':     'application/x-www-form-urlencoded'
+}
+      str_address="http://localhost:"+req.body.port+"/mining-initiation";
+    var options = {
+        url: str_address,
+        method: 'POST',
+        headers: headers,
+        form: {port: port}
+    }
 
-  });
+    // Start the request
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // Print out the response body
+
+            if (error)
+              { return console.log(err);
+
+              }
+             else {
+               console.log("checked nonce from-"+start+" - "+end);
+              }
+
+            console.log(body)
+        }
+    });
+
+    //
+    // console.log("address is "+str_address);
+    // request(str_address, { json: false }, (err, res, req) => {
+    //   if (err)
+    //     { return console.log(err);
+    //
+    //     }
+    //    else {
+    //      console.log("checked nonce from-"+start+" - "+end);
+    //     }
+
+  // });
 
   ////////////////////PUT AN EXIT STATEMENT HERE
 }
   else {
     //send notofication to stop;
     // got_nonce=1;
-    str_address="http://localhost:"+req.body.port+"/mining-initiation";
-    request(str_address, { json: {port:"-1"} }, (err, res, req) => {
-    if (err)
-      { return console.log(err);
+    console.log("correct nonce found");
+    var headers = {
+    'User-Agent':       'Super Agent/0.0.1',
+    'Content-Type':     'application/x-www-form-urlencoded'
+}
+      str_address="http://localhost:"+req.body.port+"/mining-initiation";
+    var options = {
+        url: str_address,
+        method: 'POST',
+        headers: headers,
+        form: {port: -1}
+    }
 
-      }
-     else {
-       console.log(" nonce calculated ");
-      }
+    // Start the request
+    request(options, function (error, response, body) {
+        if (!error && response.statusCode == 200) {
+            // Print out the response body
 
-  });
+            if (error)
+              { return console.log(err);
+
+              }
+             else {
+               console.log("checked nonce from-"+start+" - "+end);
+               console.log(" nonce calculated ");
+              }
+
+            console.log(body)
+        }
+    });
+
+
+
+
+
+
+
+  //   str_address="http://localhost:"+req.body.port+"/mining-initiation";
+  //   request(str_address, { json: {port:"-1"} }, (err, res, req) => {
+  //   if (err)
+  //     { return console.log(err);
+  //
+  //     }
+  //    else {
+  //      console.log(" nonce calculated ");
+  //     }
+  //
+  // });
 
   }
-  const blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+   blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
 }
-
+console.log("nonce finally calculated");
 var id=1;
   bitcoin.pendingTransactions.forEach(p => {
     console.log(p);
