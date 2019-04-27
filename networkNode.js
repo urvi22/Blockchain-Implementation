@@ -72,7 +72,7 @@ app.post('/transaction', function(req, res) {
 
 // mine initiation
 var x=0;
-var y=10000;
+var y=4000;
 app.get('/mining-initiation-bulk', function(req, res) {
 
 console.log("on mining-initiation-bulk");
@@ -106,10 +106,14 @@ console.log("on mining-initiation-bulk");
 	});
 });
 
+var ok=1;
 app.post('/mining-initiation', function(req, res) {
 console.log("mining_initialization");
 // console.log(req.body);
-  if(req.body.port!=-1)
+if (ok!=-1)
+{ ok=req.body.port;}
+
+  if(ok!=-1)
   {
     const requestPromises = [];
       const	p = {
@@ -144,187 +148,151 @@ var c = bitcoin.Create2DArray(100, 4);
 var verified_sectors_count=0;//verication count-------------------
 // mine a block
 app.post('/mine', function(req, res) {
+
   console.log("on mine");
   const start= req.body.start;
   const end= req.body.end;
-  console.log("range is "+start+" - "+end);
 
-var start_mine=1;
-var nonce=0;
-var lastBlock = bitcoin.getLastBlock();
-var previousBlockHash = lastBlock['hash'];
-var currentBlockData = {
-  transactions: bitcoin.pendingTransactions,
-  index: lastBlock['index'] + 1
-};
-var blockHash=0;
+  var start_mine=1;
+  var nonce=0;
+  var lastBlock = bitcoin.getLastBlock();
+  var previousBlockHash = lastBlock['hash'];
+  var currentBlockData = {
+    transactions: bitcoin.pendingTransactions,
+    index: lastBlock['index'] + 1
+  };
+  var blockHash=0;
 
-if(start_mine)
-{
-
-  nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData,start,end);
-  // var got_nonce=0;
-  if(nonce==-1)
-  { console.log("nonce -1 mine ");
-    //////go on;
-
-    var headers = {
-    'User-Agent':       'Super Agent/0.0.1',
-    'Content-Type':     'application/x-www-form-urlencoded'
-}
-      str_address="http://localhost:"+req.body.port+"/mining-initiation";
-    var options = {
-        url: str_address,
-        method: 'POST',
-        headers: headers,
-        form: {port: port}
-    }
-
-    // Start the request
-    request(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            // Print out the response body
-
-            if (error)
-              { return console.log(err);
-
-              }
-             else {
-               console.log("checked nonce from-"+start+" - "+end);
-              }
-
-            console.log(body)
+  if(start_mine==1 )
+  {     nonce = bitcoin.proofOfWork(previousBlockHash, currentBlockData,start,end);
+        if(nonce==-1)
+        {
+              console.log("nonce -1");
+              var headers = {
+              'User-Agent':       'Super Agent/0.0.1',
+              'Content-Type':     'application/x-www-form-urlencoded'
         }
-    });
 
-    //
-    // console.log("address is "+str_address);
-    // request(str_address, { json: false }, (err, res, req) => {
-    //   if (err)
-    //     { return console.log(err);
-    //
-    //     }
-    //    else {
-    //      console.log("checked nonce from-"+start+" - "+end);
-    //     }
+        str_address="http://localhost:"+req.body.port+"/mining-initiation";
 
-  // });
-
-  ////////////////////PUT AN EXIT STATEMENT HERE
-}
-  else {
-    //send notofication to stop;
-    // got_nonce=1;
-    console.log("correct nonce found");
-    var headers = {
-    'User-Agent':       'Super Agent/0.0.1',
-    'Content-Type':     'application/x-www-form-urlencoded'
-}
-      str_address="http://localhost:"+req.body.port+"/mining-initiation";
-    var options = {
-        url: str_address,
-        method: 'POST',
-        headers: headers,
-        form: {port: -1}
-    }
-
-    // Start the request
-    request(options, function (error, response, body) {
-        if (!error && response.statusCode == 200) {
-            // Print out the response body
-
-            if (error)
-              { return console.log(err);
-
-              }
-             else {
-               console.log("checked nonce from-"+start+" - "+end);
-               console.log(" nonce calculated ");
-              }
-
-            console.log(body)
+        var options = {
+            url: str_address,
+            method: 'POST',
+            headers: headers,
+            form: {port: port}
         }
-    });
+
+  // Start the request
+      request(options, function (error, response, body) {
+              if (!error && response.statusCode == 200) {
+                      if (error)
+                        { return console.log(err);
+
+                        }
+                       else {
+                         console.log("checked nonce from-"+start+" - "+end);
+                        }
+              }
+        });
+
+
+      }/////////////////////end of if nonce not found
+      else {
+        //send notofication to stop;
+        blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+        var id=0;
+          bitcoin.pendingTransactions.forEach(p => {
+            id=p.transactionId;
+            if (c[id][3]==1)
+            verified_sectors_count=1;
+            else {
+              verified_sectors_count=0;
+              if (verified_sectors_count==0) return false
+              else return true
+              }
+          })
+
+
+          if(verified_sectors_count==1)
+          {          	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
+
+                    	const requestPromises = [];
+                    	bitcoin.networkNodes.forEach(networkNodeUrl => {
+                    		const requestOptions = {
+                    			uri: networkNodeUrl + '/receive-new-block',
+                    			method: 'POST',
+                    			body: { newBlock: newBlock },
+                    			json: true
+                    		};
+
+                    		requestPromises.push(rp(requestOptions));
+                    	});
+
+                    	Promise.all(requestPromises)
+
+                    	.then(data => {
+                    		res.json({
+                    			note: "New block mined & broadcast successfully",
+                    			block: newBlock
+                    		});
+                    	});
+          }
+              else{
+                res.json({ note: 'not enough verification' });
+              }
 
 
 
 
+        //send notification to stop
+        var headers = {
+            'User-Agent':       'Super Agent/0.0.1',
+            'Content-Type':     'application/x-www-form-urlencoded'
+            }
+            str_address="http://localhost:"+req.body.port+"/mining-initiation";
+        var options = {
+                url: str_address,
+                method: 'POST',
+                headers: headers,
+                form: {port: -1}
+            }
 
+        // Start the request
+            request(options, function (error, response, body) {
+                if (!error && response.statusCode == 200) {
+                    // Print out the response body
 
+                    if (error)
+                      { return console.log(err);
 
-  //   str_address="http://localhost:"+req.body.port+"/mining-initiation";
-  //   request(str_address, { json: {port:"-1"} }, (err, res, req) => {
-  //   if (err)
-  //     { return console.log(err);
-  //
-  //     }
-  //    else {
-  //      console.log(" nonce calculated ");
-  //     }
-  //
-  // });
-
-  }
-   blockHash = bitcoin.hashBlock(previousBlockHash, currentBlockData, nonce);
+                      }
+                     else {
+                       console.log("checked nonce from-"+start+" - "+end);
+                       //console.log(" nonce calculated ");
+                      }
+                    //console.log(body)
+                }
+            });
+      }////end of else
 }
-console.log("nonce finally calculated");
-var id=1;
-  bitcoin.pendingTransactions.forEach(p => {
-    console.log(p);
-    id=p.transactionId;
-    if (c[id][3]==1)
-    verified_sectors_count=1;
-    else {
-      verified_sectors_count=0;
-      if (verified_sectors_count==0) return false
-      else return true
-      }
-  })
+//console.log("nonce finally calculated");
 
-  // if(c[id][0]>=Math.ceil(ver1.length/2) && c[id][1]>=Math.ceil(ver2.length/2) && c[id][1]>=Math.ceil(ver3.length/2)) //changeeeeeeeee whennnchangee number of nodes..............
-  //   {
-  //     verified_sectors_count=1;
-  //     console.log("verified_sectors_count=="+verified_sectors_count);
-  //   }
-  if(verified_sectors_count==1){
-  	const newBlock = bitcoin.createNewBlock(nonce, previousBlockHash, blockHash);
-
-  	const requestPromises = [];
-  	bitcoin.networkNodes.forEach(networkNodeUrl => {
-  		const requestOptions = {
-  			uri: networkNodeUrl + '/receive-new-block',
-  			method: 'POST',
-  			body: { newBlock: newBlock },
-  			json: true
-  		};
-
-  		requestPromises.push(rp(requestOptions));
-  	});
-
-  	Promise.all(requestPromises)
-
-  	.then(data => {
-  		res.json({
-  			note: "New block mined & broadcast successfully",
-  			block: newBlock
-  		});
-  	});
-  }
-  else{
-    res.json({ note: 'not enough verification' });
-  }
 });
 
 // receive new block
 app.post('/receive-new-block', function(req, res) {
+
 	const newBlock = req.body.newBlock;
+  //console.log(newBlock);
 	const lastBlock = bitcoin.getLastBlock();
+
 	const correctHash = lastBlock.hash === newBlock.previousBlockHash;
 	const correctIndex = lastBlock['index'] + 1 === newBlock['index'];
 
 	if (correctHash && correctIndex) {
 		bitcoin.chain.push(newBlock);
-    //bitcoin.update_money();
+    console.log(newBlock.transactions);
+    bitcoin.update_money(newBlock.transactions);
 		bitcoin.pendingTransactions = [];
 		res.json({
 			note: 'New block received and accepted.',
@@ -563,7 +531,7 @@ app.post('/transaction/broadcast', function(req, res) {
     urlss[i]+=1;
   }
 
-  console.log("urlss="+urlss);
+  //console.log("urlss="+urlss);
   console.log("all urls="+bitcoin.networkNodes);
 
 	bitcoin.networkNodes.forEach(networkNodeUrl => {
@@ -586,7 +554,7 @@ app.post('/transaction/broadcast', function(req, res) {
 	});
 
   print_json="Transaction and sector created and broadcast successfully";
-  console.log(port+"---------port");
+  //console.log(port+"---------port");
   if (flag==1)
   {
     str_address="http://localhost:"+port+"/sector/broadcast";
@@ -694,12 +662,8 @@ app.post('/verify', function(req, res) {
   const p = req.body.port;
   const a = req.body.sector_id;
   const id=req.body.transactionid;
-  //console.log("id---"+id)
   var min=bitcoin.sector_list[a].veri;
   ver_urls=[];
-  // ver1=[];
-  // ver2=[];
-  // ver3=[];
   var len=bitcoin.networkNodes.length;
 
   var word="";
@@ -717,23 +681,11 @@ app.post('/verify', function(req, res) {
       word+=min[i];
     }
   }
-  //console.log(ver_urls);
-  // for (var i=0;i<ver_urls.length;)
-  // {
-  //     ver1.push(ver_urls[i++]);
-  //     if(i==len)
-  //     break;
-  //     ver2.push(ver_urls[i++]);
-  //     if(i==len)
-  //     break;
-  //     ver3.push(ver_urls[i++]);
-  //     if(i==len)
-  //     break;
-  //   }
+
     var nSectors= 6/2;
     var nNodes= Math.floor(ver_urls.length / nSectors);
-    console.log("nSectors-"+nSectors);
-    console.log("nNodes-"+nNodes);
+    //console.log("nSectors-"+nSectors);
+    //console.log("nNodes-"+nNodes);
     var ver_nodes_array = bitcoin.Create2DArray(nSectors, nNodes);
     //console.log(arr);
     var ind=0;
@@ -744,42 +696,24 @@ app.post('/verify', function(req, res) {
       }
     }
 
-      console.log("p--"+p)
-      for(var k=0;k<nSectors;k++)
-      {console.log("ver"+(k+1)+"--"+ver_nodes_array[k]);}
-      // console.log("ver2--"+ver_nodes_array[1]);
-      // console.log("ver3-"+ver_nodes_array[2]);
+      //console.log("port working--"+p)
+      //for(var k=0;k<nSectors;k++)
+      //{console.log("ver"+(k+1)+"--"+ver_nodes_array[k]);}
+
   var i=0;
-
-  //console.log(c.length);
-
   for(i=0;i< nSectors;i++)
   {
     if(bitcoin.in_array(ver_nodes_array[i],p) )
     {
         c[id][i]+=1;
-        console.log("number of nodes verified in sector "+ (i+1) +" for id "+id+" are=="+c[id][i]);
+        console.log("number of nodes verified in sector "+ (i+1) +" for id "+id+" are ="+c[id][i]);
     }
   }
-  // if(bitcoin.in_array(ver_nodes_array[0],p) )
-  // {
-  //     c[id][0]+=1;
-  //     console.log("number of nodes verified in 1st sector for id"+id+" are=="+c[id][0]);
-  // }
-  // else if(bitcoin.in_array(ver_nodes_array[1],p) )
-  // {
-  //   c[id][1]+=1;
-  //   console.log("number of nodes verified in 2nd sector for id"+id+" are=="+c[id][1]);
-  // }
-  // else if(bitcoin.in_array(ver_nodes_array[2],p) )
-  // {
-  //   c[id][2]+=1;
-  //   console.log("number of nodes verified in 3rd sector for id"+id+" are=="+c[id][2]);
-  // }
+
   var f1=0
   for(var j=0;j< nSectors;j++)
   {
-    if(c[id][j]>=Math.ceil(ver_nodes_array[j].length/2) ) //changeeeeeeeee whennnchangee number of nodes..............
+    if(c[id][j]>=Math.ceil(ver_nodes_array[j].length/2) )
       {
         f1=1;
 
@@ -790,15 +724,8 @@ app.post('/verify', function(req, res) {
   }
   if (f1==1)
   {c[id][i]=1;
-  console.log("verification for id "+id+" = "+c[id][i]);
+  //console.log("verification for id "+id+" = "+c[id][i]);
    }
-  // if(c[id][0]>=Math.ceil(ver_nodes_array[0].length/2) && c[id][1]>=Math.ceil(ver_nodes_array[1].length/2) && c[id][2]>=Math.ceil(ver_nodes_array[2].length/2)) //changeeeeeeeee whennnchangee number of nodes..............
-  //   {
-  //     c[id][3]=1;
-  //     console.log("verification for id "+id+" = "+c[id][3]);
-  //
-  //   }
-
 res.json({ note: 'verification notification received' });
 });
 

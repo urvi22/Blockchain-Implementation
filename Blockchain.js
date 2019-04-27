@@ -100,21 +100,32 @@ Blockchain.prototype.enough_amount = function(amount,sen,res){
 	if(flag1==0)
 	{
 		users.push(sen)
-		users_amount.push(0)
+		users_amount.push(10)
 	}
 
 	if(flag2==0)
 	{
 		users.push(res)
-		users_amount.push(0)
+		users_amount.push(10)
 	}
 	console.log("user=="+users);
 };
 
-Blockchain.prototype.update_money= function(){
-			this.chain.forEach(block => {
-		if (block.transactions.amount === blockHash)
-		correctBlock = block;
+Blockchain.prototype.update_money= function(a){
+	var count=0;
+	//console.log(a);
+			a.forEach(p => {
+
+
+				//console.log("block.transactions.amount=="+p.amount);//////////////////edit
+				for (var i =0;i<users.length;i++)
+				{if(p.sender==users[i])
+				users_amount[i]-=p.amount;
+				if(p.recipient==users[i])
+				users_amount[i]+=p.amount;}
+console.log("users--"+users);
+console.log("users_amount--"+users_amount);
+
 	});
 
 };
@@ -165,7 +176,7 @@ Blockchain.prototype.proofOfWork = function(previousBlockHash, currentBlockData,
 		return nonce;}
 	else
 	{
-console.log("nonce is  -1 blockchain");
+//console.log("nonce is  -1 blockchain");
 		return -1;}
 };
 
@@ -294,7 +305,7 @@ Blockchain.prototype.allot_sectors = function(port,nodes){
 		{
 			networkNodes.push(nodes[i]);
 		}
-		console.log("networkNodes"+networkNodes);
+		//console.log("networkNodes"+networkNodes);
 
     var network_length = networkNodes.length;
     var sectorIndex=0;
@@ -341,8 +352,6 @@ Blockchain.prototype.alocate_nsector= function(arr,nNode){
   return arr;
 };
 
-// var mining_sector[]=0;
-
 Blockchain.prototype.sector_allocation= function(port)
 {
 	nodes=[]
@@ -356,7 +365,7 @@ Blockchain.prototype.sector_allocation= function(port)
   console.log("sector are= " + sectors);
   console.log("no of sectors = " + sectors.length);
   var currentNodeId=(port-1)%100;
-	console.log("port is "+ currentNodeId);                 // place Your current node id here
+	//console.log("port is "+ currentNodeId);                 // place Your current node id here
   var currentNodeSector=0;
 	flag3=1;
   for (i=0;i<sectors.length;i++)
@@ -373,7 +382,7 @@ Blockchain.prototype.sector_allocation= function(port)
 			if(flag3==0)
 			break;
   }
-  console.log("current node sector==" + currentNodeSector);
+  //console.log("current node sector==" + currentNodeSector);
 
   for (var a=[],i=0;i<sectors.length;++i)
   {
@@ -394,7 +403,7 @@ Blockchain.prototype.sector_allocation= function(port)
           count++;
       }
 			else {
-				console.log("it is current sector");
+				//console.log("it is current sector");
 			}
 
   }
