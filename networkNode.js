@@ -28,9 +28,16 @@ app.get('/blockchain', function (req, res) {
 
 app.get('/start', function(req, res) {
 
-    var name = 'hello';
-    res.render('index2.html' , {name:name})
+    res.render('info.html' , {
+      name:name,
+      sectors:sectors,
+      mining_sector:mining_sector,
+      verification_sector:verification_sector,
+      users: users,
+      veri: veri,
+      mini: mini})
 });
+
 
 // app.post('/startnode',function (req , res) {
 //   console.log(" starting nodes ");
@@ -480,6 +487,7 @@ mine_urls=[]
 // broadcast transaction.
 verification_sector=[]
 mining_sector=[]
+users=[]
 transaction_count=0
 transaction_limit=5
 start=1;
@@ -498,6 +506,8 @@ app.post('/transaction/broadcast', function(req, res) {
     verification_sector=ret[1];
     mining_sector=ret[2];
     flag=1;
+    ret2=bitcoin.enough_amount(req.body.amount, req.body.sender, req.body.recipient)
+    users=ret2[0];
   }
 
 	const newTransaction = bitcoin.createNewTransaction(req.body.transactionid,req.body.amount, req.body.sender, req.body.recipient);
@@ -572,7 +582,8 @@ app.post('/transaction/broadcast', function(req, res) {
 res.json(print_json);
 var name = "hello";
 //res.render('index2.html' , {name:name , sectors:sectors , mining_sector:mining_sector})
-
+res.render('info.html')
+res.render('home.html')
 });
 
 app.post('/sector', function(req, res) {

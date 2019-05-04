@@ -109,6 +109,7 @@ Blockchain.prototype.enough_amount = function(amount,sen,res){
 		users_amount.push(10)
 	}
 	console.log("user=="+users);
+	return[users];
 };
 
 Blockchain.prototype.update_money= function(a){
