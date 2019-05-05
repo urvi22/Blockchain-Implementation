@@ -44,10 +44,10 @@ Blockchain.prototype.getLastBlock = function() {
 
 var users=[];
 var users_amount=[];
-users.push("B")
-users_amount.push(10)
-users.push("A")
-users_amount.push(10)
+// users.push("B")
+// users_amount.push(10)
+// users.push("A")
+// users_amount.push(10)
 
 
 //
@@ -73,6 +73,39 @@ const	newTransaction = {
 if(ver==1){
   return newTransaction;}
 };
+
+Blockchain.prototype.info = function(amount,sen,res){
+	var flag1=0;
+	var flag2=0;
+	for (var i =0;i<users.length;i++)
+	{	if (users[i]==res)
+		{
+		flag2=1;
+			}
+
+		if (users[i]==sen)
+		{
+			flag1=1;
+		}
+
+	}
+
+	if(flag1==0)
+	{
+		users.push(sen)
+		users_amount.push(10)
+	}
+
+	if(flag2==0)
+	{
+		users.push(res)
+		users_amount.push(10)
+	}
+
+
+		return [users, users_amount];
+};
+
 
 
 Blockchain.prototype.enough_amount = function(amount,sen,res){
@@ -109,14 +142,43 @@ Blockchain.prototype.enough_amount = function(amount,sen,res){
 		users_amount.push(10)
 	}
 	console.log("user=="+users);
-	return[users];
+
 };
 
 Blockchain.prototype.update_money= function(a){
 	var count=0;
 	//console.log(a);
-			a.forEach(p => {
 
+			a.forEach(p => {
+				flag1=0;
+				flag2=0;
+				var sen=p.sender;
+				var res=p.recipient;
+				var amount=p.amount;
+				for (var i =0;i<users.length;i++)
+				{	if (users[i]==res)
+				 	{
+					flag2=1;
+						}
+
+					if (users[i]==sen)
+					{
+						flag1=1;
+					}
+
+				}
+
+				if(flag1==0)
+				{
+					users.push(sen)
+					users_amount.push(10)
+				}
+
+				if(flag2==0)
+				{
+					users.push(res)
+					users_amount.push(10)
+				}
 
 				//console.log("block.transactions.amount=="+p.amount);//////////////////edit
 				for (var i =0;i<users.length;i++)
@@ -124,8 +186,8 @@ Blockchain.prototype.update_money= function(a){
 				users_amount[i]-=p.amount;
 				if(p.recipient==users[i])
 				users_amount[i]+=p.amount;}
-console.log("users--"+users);
-console.log("users_amount--"+users_amount);
+				//console.log("users--"+users);
+				//console.log("users_amount--"+users_amount);
 
 	});
 
@@ -317,7 +379,7 @@ Blockchain.prototype.allot_sectors = function(port,nodes){
 		}
     a =this.shuffle(a);
 
-    var nSectors= 6;
+    var nSectors= 7;/////////////////////////////////////////////////////////////
     var nNodes= Math.floor(a.length / nSectors);
     var arr = this.Create2DArray(nSectors, nNodes);
     //console.log(arr);
@@ -394,7 +456,7 @@ Blockchain.prototype.sector_allocation= function(port)
   var i=0;
   for (i=0;i<sectors.length;i++)
   {
-      if(count==sectors.length/2)
+      if(count==Math.ceil(sectors.length/2))
       {
           break;
       }
