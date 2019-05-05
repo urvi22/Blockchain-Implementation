@@ -1,6 +1,5 @@
 body
 { background-image: url("h.png");
-opacity: 0.9;
 background-repeat: no-repeat;
 background-position: center;
 background-size: cover;
@@ -331,5 +330,5 @@ font-size: 20;
 .container1 {
 text-align: left;
 color: white;
-opacity: 0.8;
+
 }

@@ -49,9 +49,9 @@ app.get('/initialization', function(req, res) {
         res.render('initialization.html' );
         });
 
-app.get('/mining', function(req, res) {
+app.get('/nodes', function(req, res) {
 
-            res.render('mining.html' ,  {
+            res.render('nodes.html' ,  {
 
               sector1:sectors[0],
               sector2:sectors[1],
@@ -67,6 +67,11 @@ app.get('/transaction', function(req, res) {
 
                 res.render('transaction.html' );
                 });
+
+app.get('/mining', function(req, res) {
+
+                        res.render('mining.html' );
+                        });
 
 
 // create a new transaction

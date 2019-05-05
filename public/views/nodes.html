@@ -1,0 +1,144 @@
+<html>
+	<head>
+	<meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <link rel="stylesheet"
+  href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+
+
+	<script type="text/javascript">
+
+		window.onload = function () {
+			var s1 = <%-JSON.stringify(sector1)%>;
+			var s2 = <%-JSON.stringify(sector2)%>;
+			var s3 = <%-JSON.stringify(sector3)%>;
+			var s4 = <%-JSON.stringify(sector4)%>;
+			var s5 = <%-JSON.stringify(sector5)%>;
+			// var s6 = <%-JSON.stringify(sectors[5])%>;
+			// var s7 = <%-JSON.stringify(sectors[6])%>;
+		// 	function twod(r,c){
+		// 		var i = 0;
+		// 		var j = 0;
+		// 		arr = new Array();
+		// 		for(i=0; i<r; i++)
+		// 		{
+		// 				arr[i] = new Array();
+		// 				for(j=0; j<c; j++)
+		// 				{
+		// 						arr[i][j]=0;
+		// 				}
+		// 		}
+		// 			return arr;
+		// 	}
+		// 	var sectors= <%-JSON.stringify(sectors)%>;
+		// 	console.log(sectors);
+		// 	var i;
+		// //	var j;
+		// 	var s= twod(sectors.length, 4);
+		// 	for (i = 0; i < sectors.length ; i++) {
+		// 	 s[i] = sectors[i];
+		// }
+		// 	console.log(s[1]);
+
+
+		var chart = new CanvasJS.Chart("chartContainer", {
+
+			theme: "dark2",
+			//exportFileName: "Doughnut Chart",
+			//exportEnabled: true,
+			animationEnabled: true,
+			title:{
+				text: "Sector Allocation"
+			},
+			legend:{
+				cursor: "pointer",
+				itemclick: explodePie,
+				verticalAlign: "bottom",
+				horizontalAlign: "center",
+			},
+
+			data: [{
+				type: "doughnut",
+				innerRadius: 90,
+				showInLegend: true,
+				//toolTipContent: "<b>{name}</b>: ${y} (#percent%)",
+
+
+			indexLabel: "{name} ",
+
+				dataPoints: [
+
+					{ y: s1.length, name: `sector 1 has nodes : ${s1}` },
+					{ y: s2.length, name: `sector 2 has nodes : ${s2}` },
+					{ y: s3.length, name: `sector 3 has nodes : ${s3}` },
+					{ y: s4.length, name: `sector 4 has nodes : ${s4}` },
+					{ y: s5.length, name: `sector 5 has nodes : ${s5}` },
+					// { y: s6.length, name: `sector 6 has nodes : ${s6}` },
+					// { y: s7.length, name: `sector 7 has nodes : ${s7}` }
+
+				]
+			}]
+		});
+
+		chart.render();
+		function explodePie (e) {
+			if(typeof (e.dataSeries.dataPoints[e.dataPointIndex].exploded) === "undefined" || !e.dataSeries.dataPoints[e.dataPointIndex].exploded) {
+				e.dataSeries.dataPoints[e.dataPointIndex].exploded = true;
+			} else {
+				e.dataSeries.dataPoints[e.dataPointIndex].exploded = false;
+			}
+			e.chart.render();
+		}
+		}
+		</script>
+
+		<title>
+		BLOCKCHAIN
+	</title>
+	</head>
+			<link href="https://fonts.googleapis.com/css?family=PT+Serif" rel="stylesheet">
+			<link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+
+	<body>
+			<link rel="stylesheet" type="text/css" href="/css/eg.css"/>
+
+      <span style="display:block; height: 3%;"></span>
+
+		<div class="head1">
+			NODES
+	</div>
+
+
+<div class="menu"> <span></span> </div>
+<nav id="nav">
+		<ul class="main">
+			<li><a href="http://localhost:3007/home" target="_parent">Home</a></li>
+			<li><a href="http://localhost:3007/initialization" target="_parent">Initialization</a></li>
+			<li><a href="http://localhost:3007/transaction" target="_parent">Transactions</a></li>
+			<li><a href="http://localhost:3007/nodes" target="_parent">Nodes</a></li>
+      <li><a href="http://localhost:3007/information" target="_parent">Information</a></li>
+			<li><a href="http://localhost:3007/mining-initiation-bulk" target="_parent">Mine</a></li>
+		</ul>
+</nav>
+<div class="overlay"></div>
+
+<script>
+$('.menu, .overlay').click(function () {
+	$('.menu').toggleClass('clicked');
+
+	$('#nav').toggleClass('show');
+
+});
+</script>
+
+<span style="display:block; height: 7%;"></span>
+
+<div id="chartContainer" style="height: 70%; width: 100%; "></div>
+<script src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
+
+</body>
+</html>
