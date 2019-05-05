@@ -379,7 +379,7 @@ Blockchain.prototype.allot_sectors = function(port,nodes){
 		}
     a =this.shuffle(a);
 
-    var nSectors= 7;/////////////////////////////////////////////////////////////
+    var nSectors= 6;/////////////////////////////////////////////////////////////
     var nNodes= Math.floor(a.length / nSectors);
     var arr = this.Create2DArray(nSectors, nNodes);
     //console.log(arr);

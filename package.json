@@ -17,7 +17,8 @@
     "node_10": "nodemon --watch . -e js ./networkNode.js 3010 http://localhost:3010",
     "node_11": "nodemon --watch . -e js ./networkNode.js 3011 http://localhost:3011",
     "node_12": "nodemon --watch . -e js ./networkNode.js 3012 http://localhost:3012",
-    "start": "concurrently \"npm run node_1\" \"npm run node_2\" \"npm run node_3\" \"npm run node_4\" \"npm run node_5\" \"npm run node_6\" \"npm run node_7\" \"npm run node_8\" \"npm run node_9\" \"npm run node_10\" \"npm run node_11\" \"npm run node_12\""
+    "node_13": "nodemon --watch . -e js ./networkNode.js 3013 http://localhost:3013",
+    "start": "concurrently \"npm run node_1\" \"npm run node_2\" \"npm run node_3\" \"npm run node_4\" \"npm run node_5\" \"npm run node_6\" \"npm run node_7\" \"npm run node_8\" \"npm run node_9\" \"npm run node_10\" \"npm run node_11\" \"npm run node_12\" \"npm run node_13\""
   },
   "author": "",
   "license": "ISC",

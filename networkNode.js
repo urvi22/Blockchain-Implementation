@@ -486,7 +486,7 @@ app.post('/transaction/broadcast', function(req, res) {
     flag=1;
     ret2=bitcoin.info(req.body.amount,req.body.sender,req.body.recipient);
     users=ret2[0];
-    console.log(users+"btaojkjbjhvhc");
+    console.log(users);
     users_amount=ret2[1];
   }
 
@@ -676,7 +676,7 @@ app.post('/verify', function(req, res) {
     }
   }
   //console.log("ver_urls"+ver_urls);
-    var nSectors= Math.ceil(7/2);
+    var nSectors= Math.ceil(6/2);
     var nNodes= Math.ceil(ver_urls.length / nSectors);
     //console.log("nSectors-"+nSectors);
     //console.log("nNodes-"+nNodes);
