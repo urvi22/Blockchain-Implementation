@@ -1,5 +1,5 @@
 body
-{ background-image: url("h.jpg");
+{ background-image: url("h.png");
 opacity: 0.9;
 background-repeat: no-repeat;
 background-position: center;
@@ -329,7 +329,7 @@ color: white;
 font-size: 20;
 }
 .container1 {
-text-align: center;
+text-align: left;
 color: white;
 opacity: 0.8;
 }

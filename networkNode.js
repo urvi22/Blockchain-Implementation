@@ -58,7 +58,8 @@ app.get('/mining', function(req, res) {
               sector3:sectors[2],
               sector4:sectors[3],
               sector5:sectors[4],
-              sector6:sectors[5]
+              sector6:sectors[5],
+              sectorok:sectors
               })
             });
 

@@ -17,7 +17,8 @@
 			var s3 = <%-JSON.stringify(sector3)%>;
 			var s4 = <%-JSON.stringify(sector4)%>;
 			var s5 = <%-JSON.stringify(sector5)%>;
-			var s6 = <%-JSON.stringify(sector6)%>;
+			var s6 = <%-JSON.stringify(sectors[5])%>;
+			// var s7 = <%-JSON.stringify(sectors[6])%>;
 		var chart = new CanvasJS.Chart("chartContainer", {
 			theme: "dark2",
 			//exportFileName: "Doughnut Chart",
@@ -39,12 +40,13 @@
 				//toolTipContent: "<b>{name}</b>: ${y} (#percent%)",
 			indexLabel: "{name} ",
 				dataPoints: [
-					{ y: 60, name: `sector 1 has nodes : ${s1}` },
-					{ y: 60, name: `sector 2 has nodes : ${s2}` },
-					{ y: 60, name: `sector 3 has nodes : ${s3}` },
-					{ y: 60, name: `sector 4 has nodes : ${s4}` },
-					{ y: 60, name: `sector 5 has nodes : ${s5}` },
-					{ y: 60, name: `sector 6 has nodes : ${s6}`},
+					{ y: s1.length, name: `sector 1 has nodes : ${s1}` },
+					{ y: s2.length, name: `sector 2 has nodes : ${s2}` },
+					{ y: s3.length, name: `sector 3 has nodes : ${s3}` },
+					{ y: s4.length, name: `sector 4 has nodes : ${s4}` },
+					{ y: s5.length, name: `sector 5 has nodes : ${s5}` },
+					{ y: s6.length, name: `sector 6 has nodes : ${s6}`}
+
 				]
 			}]
 		});
