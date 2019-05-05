@@ -1,12 +1,13 @@
 body
 { background-image: url("h.jpg");
+opacity: 0.9;
 background-repeat: no-repeat;
 background-position: center;
 background-size: cover;
-      /* font-family: 'Poppins', sans-serif; */
+       font-family: 'Poppins', sans-serif;
 
 }
-html	{font-size:14px}
+ html	{font-size:14px}
 
 .head
 {
@@ -326,4 +327,9 @@ position: relative;
 text-align: center;
 color: white;
 font-size: 20;
+}
+.container1 {
+text-align: center;
+color: white;
+opacity: 0.8;
 }

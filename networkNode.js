@@ -26,10 +26,10 @@ app.get('/blockchain', function (req, res) {
   res.send(bitcoin);
 });
 
-app.get('/start', function(req, res) {
+app.get('/information', function(req, res) {
 
-    res.render('info.html' , {
-      name:name,
+    res.render('information.html' , {
+
       sectors:sectors,
       mining_sector:mining_sector,
       verification_sector:verification_sector,
@@ -37,6 +37,34 @@ app.get('/start', function(req, res) {
       veri: veri,
       mini: mini})
 });
+
+app.get('/home', function(req, res) {
+
+    res.render('home.html' );
+    });
+
+app.get('/initialization', function(req, res) {
+
+        res.render('initialization.html' );
+        });
+
+app.get('/mining', function(req, res) {
+
+            res.render('mining.html' ,  {
+
+              sector1:sectors[0],
+              sector2:sectors[1],
+              sector3:sectors[2],
+              sector4:sectors[3],
+              sector5:sectors[4],
+              sector6:sectors[5]
+              })
+            });
+
+app.get('/transaction', function(req, res) {
+
+                res.render('transaction.html' );
+                });
 
 
 // app.post('/startnode',function (req , res) {
@@ -579,11 +607,14 @@ app.post('/transaction/broadcast', function(req, res) {
   });
   flag=0;
   }
-res.json(print_json);
-var name = "hello";
+  var name = "hello";
+//  res.render('home.html');
+  //res.render('home.html')
+//res.json(print_json);
+
 //res.render('index2.html' , {name:name , sectors:sectors , mining_sector:mining_sector})
-res.render('info.html')
-res.render('home.html')
+
+//res.render('home.html')
 });
 
 app.post('/sector', function(req, res) {
@@ -630,7 +661,7 @@ app.post('/verification-broadcast', function(req, res) {
       transactionid:req.body.transactionid
   	};
 
-
+  console.log(bitcoin.sector_list[a].minee);
   var min=bitcoin.sector_list[a].minee;//////////
   var word="";
   min=min+" ";

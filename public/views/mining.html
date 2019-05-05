@@ -8,8 +8,16 @@
     <link rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
 
+
 	<script type="text/javascript">
+
 		window.onload = function () {
+			var s1 = <%-JSON.stringify(sector1)%>;
+			var s2 = <%-JSON.stringify(sector2)%>;
+			var s3 = <%-JSON.stringify(sector3)%>;
+			var s4 = <%-JSON.stringify(sector4)%>;
+			var s5 = <%-JSON.stringify(sector5)%>;
+			var s6 = <%-JSON.stringify(sector6)%>;
 		var chart = new CanvasJS.Chart("chartContainer", {
 			theme: "dark2",
 			//exportFileName: "Doughnut Chart",
@@ -31,12 +39,12 @@
 				//toolTipContent: "<b>{name}</b>: ${y} (#percent%)",
 			indexLabel: "{name} ",
 				dataPoints: [
-					{ y: 60, name: "sector 1" },
-					{ y: 60, name: "sector 2" },
-					{ y: 60, name: "sector 3" },
-					{ y: 60, name: "sector 4" },
-					{ y: 60, name: "sector 5" },
-					{ y: 60, name: "sector 6"},
+					{ y: 60, name: `sector 1 has nodes : ${s1}` },
+					{ y: 60, name: `sector 2 has nodes : ${s2}` },
+					{ y: 60, name: `sector 3 has nodes : ${s3}` },
+					{ y: 60, name: `sector 4 has nodes : ${s4}` },
+					{ y: 60, name: `sector 5 has nodes : ${s5}` },
+					{ y: 60, name: `sector 6 has nodes : ${s6}`},
 				]
 			}]
 		});
@@ -61,7 +69,7 @@
       rel="stylesheet">
 
 	<body>
-			<link rel="stylesheet" type="text/css" href="eg.css"/>
+			<link rel="stylesheet" type="text/css" href="/css/eg.css"/>
 
       <span style="display:block; height: 3%;"></span>
 
@@ -73,11 +81,11 @@
 <div class="menu"> <span></span> </div>
 <nav id="nav">
 		<ul class="main">
-				<li><a href="home.html" target="_parent">About</a></li>
-				<li><a href="initial.html" target="_parent">Initialization</a></li>
-				<li><a href="t.html" target="_parent">Transactions</a></li>
-				<li><a href="mine.html" target="_parent">Mine</a></li>
-				<li><a href="http://localhost:3001" target="_parent">Information</a></li>
+			<li><a href="http://localhost:3001/home" target="_parent">Home</a></li>
+			<li><a href="http://localhost:3001/initialization" target="_parent">Initialization</a></li>
+			<li><a href="http://localhost:3001/transaction" target="_parent">Transactions</a></li>
+			<li><a href="http://localhost:3001/mining" target="_parent">Mine</a></li>
+			<li><a href="http://localhost:3001/information" target="_parent">Information</a></li>
 		</ul>
 </nav>
 <div class="overlay"></div>
