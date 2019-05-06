@@ -2,7 +2,7 @@ body
 { background-image: url("h.png");
 background-repeat: no-repeat;
 background-position: center;
-background-size: cover;
+background-size: 2000px 1000px;
        font-family: 'Poppins', sans-serif;
 
 }

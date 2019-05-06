@@ -57,7 +57,7 @@ $('.menu, .overlay').click(function () {
 
 	<br>
 
-<div class="start-all" id = "start-all">
+<!-- <div class="start-all" id = "start-all">
   &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 	<p class="text">Enter number of nodes to run </p>
 	<input type="text" id="start2" name="nodes">
@@ -69,7 +69,8 @@ $('.menu, .overlay').click(function () {
 	<a href= "http://localhost:3001/blockchain" target="_blank">
 		<button onclick="nodebroadcast()" class="btn btn-primary margin-auto btn-search">nodes broadcast</button>
 	</a>
-</div>
+</div> -->
+
 
   <script>
     function startallnodes() {
@@ -117,12 +118,11 @@ $('.menu, .overlay').click(function () {
 	<div class="hit" id ="hit">
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<p class="text">Enter node server/name: </p>
-			<input type="text" id="id" name="node">
+			<input type="text" id="server" name="node">
 			<select id="options" class="dd">
        <option value="blockchain">View Block</option>
-       <option value="mine">Mine New Block</option>
+       <option value="mining-initiation-bulk">Mine New Block</option>
        <option value="transaction">Transactions</option>
-			 <option value="sector_allocation">Allocate-sectors</option>
      </select>
 		 <br>
       &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -132,13 +132,48 @@ $('.menu, .overlay').click(function () {
 
 <script>
 	function myFunction() {
-  var x = document.getElementById("id").value;
+  var x = document.getElementById("server").value;
 	var y = document.getElementById("options").value;
 	var z = "http://localhost:"+x+"/"+y;
   window.open(z, "_blank");
 }
 </script>
 
+<div class="hit" id ="hit">
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		<p class="text">Enter node server/name: </p>
+		<input type="text" id="id" name="node">
+		<br>
+		<p class="text">Enter transaction id: </p>
+		<input type="text" id="transid" name="reciever">
+		<br>
+		 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+		 <button onclick="verify()" class="btn btn-primary margin-auto btn-search">VERIFY TRANSACTION</button>
+
+</div>
+
+<script>
+	function verify() {
+	var a = document.getElementById("transid").value;
+	var b = document.getElementById("id").value;
+  var z = "http://localhost:"+b+"/"+"verification-broadcast";
+  console.log(b);
+
+	var formData = {
+ 'transactionid':a
+};
+	// window.open(z, "_blank");
+	$.ajax({
+			 url: z,
+			 type: 'POST',
+			 dataType: 'json',
+			 data: formData
+		}).done(function(data) {
+			 // Call your open_popup() function here
+		 });
+
+}
+</script>
 
 <style type="text/css">
   html, body {

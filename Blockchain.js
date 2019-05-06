@@ -185,7 +185,7 @@ Blockchain.prototype.update_money= function(a){
 				{if(p.sender==users[i])
 				users_amount[i]-=p.amount;
 				if(p.recipient==users[i])
-				users_amount[i]+=p.amount;}
+				users_amount[i]+=parseInt(p.amount);}
 				//console.log("users--"+users);
 				//console.log("users_amount--"+users_amount);
 

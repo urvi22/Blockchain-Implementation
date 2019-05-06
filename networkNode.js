@@ -116,7 +116,7 @@ res.json({ note: 'sent notification to mine.' });
 	.then(data => {
 		res.json({ note: 'sent notification to mine.' });
 	});
-  res.end();
+  //res.end();
 });
 
 var ok=1;
@@ -147,12 +147,12 @@ if (ok!=-1)
       .then(data => {
         res.json({ note: 'sent notification to mine.' });
       });
-      res.end();
+    //  res.end();
   }
   else {
 
     res.json({ note: 'stop mining' });
-    res.end();
+    //res.end();
   }
 
 });
@@ -252,7 +252,7 @@ app.post('/mine', function(req, res) {
                     			note: "New block mined & broadcast successfully",
                     			block: newBlock
                     		});
-                        res.end();
+                      //  res.end();
                     	});
           }
               else{
